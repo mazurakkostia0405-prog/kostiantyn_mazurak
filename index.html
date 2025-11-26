@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Портфоліо Поета | Хмельницька душа</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --accent-color: #d4af37; /* Золотий відтінок */
+            --secondary-bg: #252525;
+            --font-main: 'Cormorant Garamond', serif;
+            --font-ui: 'Montserrat', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-ui);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-main);
+            font-weight: 600;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: 0.3s;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* --- Header --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            background: rgba(26, 26, 26, 0.95);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid #333;
+        }
+
+        .logo {
+            font-family: var(--font-main);
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 30px;
+        }
+
+        nav a {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1457369804613-52c61a468e7d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: fadeIn 2s ease;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            font-family: var(--font-main);
+            font-style: italic;
+            color: var(--accent-color);
+            margin-bottom: 40px;
+            animation: fadeIn 3s ease;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        /* --- Sections Common --- */
+        section {
+            padding: 80px 10%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: var(--accent-color);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: var(--accent-color);
+            margin: 20px auto 0;
+        }
+
+        /* --- About --- */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .about-img {
+            width: 100%;
+            height: 400px;
+            background-color: #333; /* Місце для фото */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--accent-color);
+        }
+
+        /* --- Work Grid (Poetry & Stories) --- */
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .work-card {
+            background: var(--secondary-bg);
+            padding: 30px;
+            border: 1px solid #333;
+            transition: 0.3s;
+        }
+
+        .work-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+        }
+
+        .work-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .work-card p {
+            font-family: var(--font-main);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+
+        /* --- Featured Story (Хмельницька душа) --- */
+        .featured-story {
+            background: var(--secondary-bg);
+            padding: 40px;
+            border-left: 4px solid var(--accent-color);
+            margin-top: 40px;
+        }
+
+        .story-content {
+            font-family: var(--font-main);
+            font-size: 1.2rem;
+            line-height: 1.8;
+            max-height: 300px; /* Початкова висота */
+            overflow: hidden;
+            position: relative;
+            transition: max-height 0.5s ease;
+        }
+
+        .story-content.expanded {
+            max-height: none;
+        }
+
+        .story-content::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(transparent, var(--secondary-bg));
+            pointer-events: none;
+        }
+
+        .story-content.expanded::after {
+            display: none;
+        }
+
+        .read-more-btn {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--accent-color);
+            cursor: pointer;
+            font-weight: bold;
+            border-bottom: 1px dashed var(--accent-color);
+        }
+
+        /* --- Contact --- */
+        .contact-container {
+            text-align: center;
+        }
+
+        .social-links {
+            margin-top: 30px;
+            font-size: 1.5rem;
+        }
+
+        .social-links a {
+            margin: 0 15px;
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 40px;
+            background: #111;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* --- Mobile --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .about-content { grid-template-columns: 1fr; }
+            nav { display: none; } /* Спрощено для прикладу */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Ім'я Прізвище</div>
+        <nav>
+            <ul>
+                <li><a href="#about">Про автора</a></li>
+                <li><a href="#poetry">Вірші</a></li>
+                <li><a href="#prose">Проза</a></li>
+                <li><a href="#contact">Контакти</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Слово — це зброя</h1>
+        <p>Поезія. Проза. Історичні нариси.</p>
+        <a href="#prose" class="btn">Читати твори</a>
+    </section>
+
+    <section id="about">
+        <h2 class="section-title">Про автора</h2>
+        <div class="about-content">
+            <div class="about-img">
+                <span style="color: #666;">[Ваше Фото]</span>
+            </div>
+            <div class="about-text">
+                <p>Вітаю. Тут ви можете розмістити свою біографію. Розкажіть про свій шлях, про те, що надихає вас писати історичну прозу та вірші.</p>
+                <p>Моя творчість — це спроба осмислити минуле, щоб зрозуміти сучасне. Я пишу про славетні та трагічні сторінки нашої історії.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="poetry">
+        <h2 class="section-title">Вибрані Вірші</h2>
+        <div class="work-grid">
+            <div class="work-card">
+                <h3>Назва вірша 1</h3>
+                <p>Тут буде уривок або повний текст вашого вірша. Рядки, що торкаються душі...</p>
+                <a href="#" style="color: var(--accent-color); font-size: 0.9rem;">Читати далі &rarr;</a>
+            </div>
+            <div class="work-card">
+                <h3>Назва вірша 2</h3>
+                <p>Ще один приклад оформлення вірша. Місце для вашої творчості.</p>
+                <a href="#" style="color: var(--accent-color); font-size: 0.9rem;">Читати далі &rarr;</a>
+            </div>
+            <div class="work-card">
+                <h3>Назва вірша 3</h3>
+                <p>Короткі рядки про важливе. Ваші думки та рими.</p>
+                <a href="#" style="color: var(--accent-color); font-size: 0.9rem;">Читати далі &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="prose">
+        <h2 class="section-title">Історична Проза</h2>
+        
+        <div class="featured-story">
+            <h3>Хмельницька душа</h3>
+            <p style="margin-bottom: 20px; font-style: italic; color: #888;">Уривок з історичного оповідання</p>
+            
+            <div class="story-content" id="story1">
+                <p>Степ — що покрився мовчанням, темним, похилим закріпаченням, підкоренням селян. Час золотого десятиліття для ляхів та час десятків років поновлення, страждань півдня руського народу, що звуться українцями, нацією незламного огню, нацією бестії без голови…</p>
+                <br>
+                <p>Надворі був квітучий смертями та надії 1648 рік. Відбувався збір Ради в Корсуні, на святій землі. Той час десятиліття без повстань вимагав сильно лідера — вимагав того, хто може без меча, тільки булавою, об’єднати всіх тих козаків, втікачів, повсталих селян, шляхтичів; всіх, хто бачив козаччину побудовою держави, всіх, хто жадав волі, власної мови, країни, власного вишневого садочку, бодай маленький кувалок землі. Але без польського чоботу та гніту…</p>
+                <br>
+                <p>Аж раптом, наче сокіл серед степу, виринає корінь із землі, являється перед ними світличний, являється мужній Хмель, що зветься Богдан. Він починає свою річ — то глеготіння, від якого кожен замовк та слухав його сильну, магічну та водночас темну думу… Він наче оратор, наче поцілований Богом лідер народу… І всі одностайно вибирають його як гетьмана, державця булави, справжнього державника, сонцем, що проступає над поневоленням народу та доби столітнього бездержав’я.</p>
+                <br>
+                <p>І починає він військо збирати на ту війну визвольну… Збирає з Києва, з Корсуні, з Житомира, з Січі кінноту і збирає люту силу, силу полум’я освяченого хрестом… Вступає й Хмельницький у Жовту Воду і промовляє:<br>
+                — Бийся єдиний, бийся до ночі, хай смерть твоя забирає ночі, і у пітьму одне шепочу: забери мене, збережи співочу, хай живе Русь козачинна, та хай глегоче.</p>
+                <br>
+                <p>І б’ються мужно, тужно всі вони; помирають, відступають кляті ті ляхи. Це Козачина прийшла, погромила майже всіх вона; покривається кров’ю Жовта Вода, спливають поволі тіла… І каже Хмельницький: «За ним, гойда, брати мої; за ними, гойда, до кінця…»</p>
+                <br>
+                <p>І от уже під Корсунем вони. В їх очах горів неначе вогонь, вогонь збуту, слави, призначення в житті, сенс життя – повстання, сенс буття як держава вільна що зветься Запоріжжя. Розгромили польське військо все вони і почули тую славу інші козаки, приєдналися до них вони.</p>
+                <br>
+                <p>Гетьман каже: «Славтеся лівобережні брати ви мої пишіть пісні жінки, вступайте до лав наших славні нові козаки…» І доходять до Пилявець. І відбувається третя вже тая битва, битва не на біль а смерть. Ляхів сила-селена збігається в один момент і б’ються ляхи до кінця. Бере Хмельницький слово промовляє – «до кінця не осоромимо землі руської, уб’ємо цього польського гонця».</p>
+                <br>
+                <p>Єднається тепер і правий берег Єднається уся земля свята – руська духом, козацька силою вона… І тоді прийшов мир… Зборівський мир — не ласка короля, а результат сили шаблі й волі. Київ, Чернігів, Брацлав — землі, де козацький гнів і честь народили нову державу. Столиця Чигирин — колиска козачини майбутня та.</p>
+                <br>
+                <p>Та зрозуміло, що не назавжди, бо і польські, і козацькі душі ще боєм палали… Після Зборова, надії миру, летіли степом чорнії ворони. І зійшло криваве сонце над Дніпром, і зрозуміли всі: не буде миру — буде битва і погром.</p>
+                <br>
+                <p>І дістав козак меча — почалася битва Берестецька… Страшна кров покрила степ. Бій зрадили татари — народ наш весь усій. Заплатив король їм купу срібняків; татари кляті повтікали до панів. Битву ту програли, але не до кінця — Київське воєводство ще зостали, ляхів ще довго-довго проклинали…</p>
+                <br>
+                <p>І степ розкрив їм дорогу на Батіг — місце, де настав реванш, пролиття святої крові. Там кожен крок був відлунням Берестечка. Для ляхів стала битва ця багнетом, поразкою сорок восьмого року, немов силуетом…</p>
+                <br>
+                <p>Не розуміли, що націю, яка має національну свідомість і вогонь воювати, неможливо здолати, бо вона буде хоч сотні років поневолена, та буде повставати… бо не боїться вона ні вмерти, ні тіло віддати, — душа їх буде в інших жити, іншим правду й сутність глеготати…</p>
+                <br>
+                <p>Потім був Жванець, була зрада, і був Переяслав. Знав Богдан, що треба було іншого союзника шукати, та не було вже куди діватись. Задурманений москаль поводився дуже зверхньо… Хмельницький зрадник? Все то він кричав… Розчарувався наш Богдан, хоч і все прекрасно він до того знав. «Межі моєї держави — це межі моєї мови», — каже Хмельницький.</p>
+                <br>
+                <p>Далі час не довго той тягнувся; за рік Хмельницький помер. Кажуть: може отруїли, може захворів, може і убили… Та неважливо вже, бо настала темна смута, темна та руїна. Поділилася за пару років наша та країна на лівий і на правий — і не було вже тої слави…</p>
+            </div>
+            <div class="read-more-btn" onclick="toggleStory()">Читати повністю</div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2 class="section-title">Зв'язок</h2>
+        <div class="contact-container">
+            <p>Я завжди відкритий до співпраці, літературних читань та нових проектів.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-telegram"></i></a>
+                <a href="mailto:email@example.com"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Ім'я Прізвище. Всі права захищено.</p>
+    </footer>
+
+    <script>
+        function toggleStory() {
+            const content = document.getElementById('story1');
+            const btn = document.querySelector('.read-more-btn');
+            
+            content.classList.toggle('expanded');
+            
+            if (content.classList.contains('expanded')) {
+                btn.textContent = "Згорнути";
+            } else {
+                btn.textContent = "Читати повністю";
+                // Плавна прокрутка до початку твору при згортанні
+                document.getElementById('prose').scrollIntoView({behavior: 'smooth'});
+            }
+        }
+
+        // Плавна прокрутка для меню
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
