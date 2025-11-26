@@ -3,6 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="description" content="Офіційний сайт поета та прозаїка Костянтина Мазурака. Сучасна українська поезія, історична проза, націоналістична лірика.">
+    <meta name="keywords" content="Костянтин Мазурак, поет, сучасна поезія, вірші, проза, українська література, історичні оповідання, націоналізм">
+    <meta name="author" content="Костянтин Мазурак">
+    
+    <meta property="og:title" content="Портфоліо | Костянтин Мазурак">
+    <meta property="og:description" content="Поезія. Проза. Історична пам'ять. Сайт сучасного українського автора.">
+    <meta property="og:image" content="photo.jpg">
+    <meta property="og:type" content="website">
+
     <title>Портфоліо | Костянтин Мазурак</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +25,7 @@
         :root {
             --bg-color: #0f0f0f;
             --text-color: #e0e0e0;
-            --accent-color: #d4af37; /* Благородне золото */
+            --accent-color: #d4af37;
             --accent-hover: #f9ce45;
             --card-bg: #1a1a1a;
             --secondary-bg: #161616;
@@ -35,21 +45,10 @@
 
         /* Scroll Progress Bar */
         .progress-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: transparent;
-            z-index: 1001;
+            position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: transparent; z-index: 1001;
         }
-        
         .progress-bar {
-            height: 4px;
-            background: var(--accent-color);
-            width: 0%;
-            transition: width 0.1s;
-            box-shadow: 0 0 10px var(--accent-color);
+            height: 4px; background: var(--accent-color); width: 0%; transition: width 0.1s; box-shadow: 0 0 10px var(--accent-color);
         }
 
         /* Scrollbar styling */
@@ -58,328 +57,132 @@
         ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
 
-        h1, h2, h3 { font-family: var(--font-main); font-weight: 600; }
+        h1, h2, h3, h4 { font-family: var(--font-main); font-weight: 600; }
         a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
         ul { list-style: none; }
 
         /* --- Animations --- */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* Typing Effect Cursor */
-        .typing-cursor {
-            display: inline-block;
-            width: 2px;
-            background-color: var(--accent-color);
-            animation: blink 1s infinite;
-        }
+        .typing-cursor { display: inline-block; width: 2px; background-color: var(--accent-color); animation: blink 1s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
         /* --- Header --- */
         header {
-            position: fixed;
-            top: 0; width: 100%;
-            padding: 20px 5%;
-            background: rgba(15, 15, 15, 0.9);
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            position: fixed; top: 0; width: 100%; padding: 20px 5%;
+            background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(10px);
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .logo {
-            font-family: var(--font-main);
-            font-size: 1.6rem;
-            color: var(--accent-color);
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
+        .logo { font-family: var(--font-main); font-size: 1.6rem; color: var(--accent-color); font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
 
-        nav ul { display: flex; gap: 30px; }
-        nav a { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: #aaa; position: relative; }
-        nav a::after {
-            content: ''; position: absolute; width: 0; height: 1px; bottom: -5px; left: 0;
-            background-color: var(--accent-color); transition: width 0.3s;
-        }
+        nav ul { display: flex; gap: 20px; }
+        nav a { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #aaa; position: relative; }
         nav a:hover { color: #fff; }
+        nav a::after { content: ''; position: absolute; width: 0; height: 1px; bottom: -5px; left: 0; background-color: var(--accent-color); transition: width 0.3s; }
         nav a:hover::after { width: 100%; }
 
         /* --- Hero --- */
         .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 20px;
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px;
             background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1457369804613-52c61a468e7d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
-            background-size: cover;
-            background-attachment: fixed;
+            background-size: cover; background-attachment: fixed;
         }
-
         .hero h1 { font-size: 4rem; margin-bottom: 15px; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); animation: fadeIn 1.5s ease; }
-        .hero p { 
-            font-size: 1.5rem; 
-            font-family: var(--font-main); 
-            font-style: italic; 
-            color: var(--accent-color); 
-            margin-bottom: 40px; 
-            min-height: 1.5em; /* Щоб текст не стрибав при друку */
-        }
+        .hero p { font-size: 1.5rem; font-family: var(--font-main); font-style: italic; color: var(--accent-color); margin-bottom: 40px; min-height: 1.5em; }
         
-        /* Button Styles */
         .btn {
-            padding: 15px 40px;
-            border: 1px solid var(--accent-color);
-            color: var(--accent-color);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            background: transparent;
-            position: relative;
-            overflow: hidden;
+            padding: 15px 40px; border: 1px solid var(--accent-color); color: var(--accent-color); text-transform: uppercase; letter-spacing: 3px; font-size: 0.9rem; cursor: pointer; transition: all 0.4s ease; background: transparent;
         }
-        
-        .btn:hover {
-            background: var(--accent-color);
-            color: #000;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-            transform: translateY(-3px);
-        }
+        .btn:hover { background: var(--accent-color); color: #000; box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); transform: translateY(-3px); }
 
-        /* --- Sections --- */
+        /* --- Sections Common --- */
         section { padding: 100px 10%; }
-        .section-title { 
-            text-align: center; 
-            font-size: 2.5rem; 
-            margin-bottom: 60px; 
-            color: var(--accent-color); 
-            position: relative;
-            display: inline-block;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 60px; color: var(--accent-color); position: relative; }
         .section-title::after { content: ''; display: block; width: 60px; height: 2px; background: var(--accent-color); margin: 20px auto 0; }
 
         /* --- About --- */
         .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 60px;
-            align-items: center;
-            background: var(--secondary-bg);
-            padding: 50px;
-            border-radius: 4px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border-top: 1px solid #333;
+            display: grid; grid-template-columns: 1fr 1.5fr; gap: 60px; align-items: center;
+            background: var(--secondary-bg); padding: 50px; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 1px solid #333;
         }
-
         .about-text p { margin-bottom: 20px; font-size: 1.1rem; color: #bbb; text-align: justify; }
-        
         .about-img {
-            width: 100%; height: 500px; /* Трохи збільшено для портретного фото */
-            background-color: #222;
-            display: flex; align-items: center; justify-content: center;
-            border: 1px solid #333;
-            /* ВАЖЛИВО: Тут прописано шлях до вашого фото */
-            background-image: url('photo.jpg'); 
-            background-size: cover;
-            background-position: center top; /* Фокус на верхній частині фото */
-            filter: grayscale(20%); /* Легкий ефект старовини */
-            transition: 0.5s;
-            border-radius: 2px;
+            width: 100%; height: 500px; background-color: #222;
+            background-image: url('photo.jpg'); background-size: cover; background-position: center top;
+            filter: grayscale(20%); transition: 0.5s; border-radius: 2px; border: 1px solid #333;
         }
         .about-img:hover { filter: grayscale(0%); }
 
-        /* --- Poetry Grid --- */
-        .poetry-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-        }
-
+        /* --- Poetry & Cards --- */
+        .poetry-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; }
         .poem-card {
-            background: linear-gradient(145deg, #1e1e1e, #161616);
-            padding: 40px;
-            border: 1px solid #333;
-            transition: all 0.4s ease;
-            height: 500px;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
+            background: linear-gradient(145deg, #1e1e1e, #161616); padding: 40px; border: 1px solid #333; transition: all 0.4s ease; height: 500px; display: flex; flex-direction: column; position: relative; overflow: hidden;
         }
+        .poem-card:hover { border-color: var(--accent-color); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .poem-card h3 { font-size: 1.6rem; margin-bottom: 20px; color: #fff; border-bottom: 1px solid #444; padding-bottom: 15px; }
+        .poem-text { font-family: var(--font-main); font-size: 1.2rem; line-height: 1.6; color: #ccc; white-space: pre-wrap; overflow-y: auto; flex-grow: 1; padding-right: 15px; }
 
-        .poem-card::before {
-            content: '"';
-            position: absolute;
-            top: 20px; right: 30px;
-            font-size: 6rem;
-            color: rgba(255,255,255,0.03);
-            font-family: var(--font-main);
+        /* --- Quotes Section (New) --- */
+        .quotes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .quote-card {
+            background: #111; padding: 30px; border-left: 3px solid var(--accent-color); position: relative;
         }
+        .quote-card i { position: absolute; top: 20px; right: 20px; font-size: 2rem; color: #333; }
+        .quote-text { font-family: var(--font-main); font-size: 1.3rem; font-style: italic; color: #ddd; margin-bottom: 15px; }
 
-        .poem-card:hover { 
-            border-color: var(--accent-color); 
-            transform: translateY(-5px); 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        /* --- News & Events (New) --- */
+        .events-container { max-width: 800px; margin: 0 auto; }
+        .event-item {
+            display: flex; gap: 30px; padding: 20px; border-bottom: 1px solid #333; align-items: center; transition: 0.3s;
         }
+        .event-item:hover { background: #1a1a1a; }
+        .event-date { font-family: var(--font-main); font-size: 1.2rem; color: var(--accent-color); font-weight: bold; min-width: 150px; }
+        .event-desc { font-size: 1.1rem; color: #ccc; }
 
-        .poem-card h3 {
-            font-size: 1.6rem; margin-bottom: 20px; color: #fff;
-            border-bottom: 1px solid #444; padding-bottom: 15px;
-        }
-
-        .poem-text {
-            font-family: var(--font-main);
-            font-size: 1.2rem;
-            line-height: 1.6;
-            color: #ccc;
-            white-space: pre-wrap;
-            overflow-y: auto;
-            flex-grow: 1;
-            padding-right: 15px;
-        }
+        /* --- Articles (New) --- */
+        .articles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .article-card { background: var(--secondary-bg); padding: 30px; border: 1px solid #333; transition: 0.3s; }
+        .article-card:hover { border-color: var(--accent-color); }
+        .article-card h3 { font-size: 1.4rem; margin-bottom: 15px; color: #e0e0e0; }
+        .article-card p { font-size: 1rem; color: #999; margin-bottom: 20px; }
+        .article-link { color: var(--accent-color); font-weight: bold; font-size: 0.9rem; text-transform: uppercase; }
 
         /* --- Prose Section --- */
-        .prose-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 50px;
-        }
-
+        .prose-wrapper { display: flex; flex-direction: column; gap: 50px; }
         .story-block {
-            background: #e8e6e1; /* Ефект паперу */
-            color: #1a1a1a;
-            padding: 50px;
-            position: relative;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            transition: all 0.5s ease;
+            background: #e8e6e1; color: #1a1a1a; padding: 50px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
-
-        .story-block h3 {
-            font-size: 2.2rem;
-            color: #8b0000;
-            margin-bottom: 10px;
-            border-bottom: 2px solid #8b0000;
-            display: inline-block;
-            padding-bottom: 10px;
-        }
-
-        .story-meta {
-            font-style: italic;
-            color: #666;
-            margin-bottom: 30px;
-            display: block;
-        }
-
+        .story-block h3 { font-size: 2.2rem; color: #8b0000; margin-bottom: 10px; border-bottom: 2px solid #8b0000; display: inline-block; padding-bottom: 10px; }
+        .story-meta { font-style: italic; color: #666; margin-bottom: 30px; display: block; }
         .story-content {
-            font-family: var(--font-main);
-            font-size: 1.3rem;
-            line-height: 1.8;
-            text-align: justify;
-            max-height: 250px; /* Початкова висота */
-            overflow: hidden;
-            position: relative;
-            transition: max-height 0.8s ease-in-out;
+            font-family: var(--font-main); font-size: 1.3rem; line-height: 1.8; text-align: justify; max-height: 250px; overflow: hidden; position: relative; transition: max-height 0.8s ease-in-out;
         }
-
         .story-content.expanded { max-height: 5000px; }
-
         .story-content::after {
-            content: '';
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 100px;
-            background: linear-gradient(transparent, #e8e6e1);
-            pointer-events: none;
-            transition: 0.3s;
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; background: linear-gradient(transparent, #e8e6e1); pointer-events: none; transition: 0.3s;
         }
-
         .story-content.expanded::after { opacity: 0; }
-
         .read-more-btn {
-            display: inline-block;
-            margin-top: 25px;
-            padding: 10px 20px;
-            border: 1px solid #8b0000;
-            color: #8b0000;
-            text-transform: uppercase;
-            font-weight: bold;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: 0.3s;
+            display: inline-block; margin-top: 25px; padding: 10px 20px; border: 1px solid #8b0000; color: #8b0000; text-transform: uppercase; font-weight: bold; font-size: 0.9rem; cursor: pointer; transition: 0.3s;
         }
-
         .read-more-btn:hover { background: #8b0000; color: #fff; }
 
         /* --- Contact --- */
-        .contact-container { 
-            text-align: center; 
-            padding: 60px; 
-            background: var(--secondary-bg); 
-            border: 1px solid #333;
-        }
-        
-        .social-links { 
-            margin-top: 40px; 
-            display: flex; 
-            justify-content: center; 
-            gap: 30px; 
-            flex-wrap: wrap;
-        }
-        
+        .contact-container { text-align: center; padding: 60px; background: var(--secondary-bg); border: 1px solid #333; }
+        .social-links { margin-top: 40px; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
         .social-icon { 
-            font-size: 1.8rem; 
-            color: #666; 
-            transition: all 0.3s; 
-            width: 60px;
-            height: 60px;
-            border: 1px solid #333;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
+            font-size: 1.8rem; color: #666; transition: all 0.3s; width: 60px; height: 60px; border: 1px solid #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none;
         }
-        
-        .social-icon:hover { 
-            color: var(--accent-color); 
-            border-color: var(--accent-color);
-            transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
-        }
+        .social-icon:hover { color: var(--accent-color); border-color: var(--accent-color); transform: scale(1.1); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
 
-        /* Back to Top Button */
         #backToTop {
-            display: none;
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 99;
-            font-size: 18px;
-            border: none;
-            outline: none;
-            background-color: var(--accent-color);
-            color: #000;
-            cursor: pointer;
-            padding: 15px;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            transition: 0.3s;
+            display: none; position: fixed; bottom: 30px; right: 30px; z-index: 99; font-size: 18px; border: none; outline: none; background-color: var(--accent-color); color: #000; cursor: pointer; padding: 15px; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.5); transition: 0.3s;
         }
-
-        #backToTop:hover {
-            background-color: var(--accent-hover);
-            transform: translateY(-3px);
-        }
+        #backToTop:hover { background-color: var(--accent-hover); transform: translateY(-3px); }
 
         footer { text-align: center; padding: 30px; background: #000; font-size: 0.9rem; color: #444; border-top: 1px solid #222; }
 
-        /* --- Mobile --- */
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.5rem; }
             .about-content { grid-template-columns: 1fr; }
@@ -400,8 +203,11 @@
         <nav>
             <ul>
                 <li><a href="#about">Про автора</a></li>
+                <li><a href="#quotes">Цитати</a></li>
                 <li><a href="#poetry">Поезія</a></li>
                 <li><a href="#prose">Проза</a></li>
+                <li><a href="#articles">Статті</a></li>
+                <li><a href="#news">Події</a></li>
                 <li><a href="#contact">Контакти</a></li>
             </ul>
         </nav>
@@ -416,8 +222,7 @@
     <section id="about">
         <h2 class="section-title">Про автора</h2>
         <div class="about-content">
-            <div class="about-img">
-                </div>
+            <div class="about-img"></div>
             <div class="about-text">
                 <p>Мене звати Костянтин Мазурак. Я поет та прозаїк, який створює твори, що досліджують людські емоції, історичну пам’ять і внутрішні конфлікти. Писати почав у підлітковому віці, і відтоді слова стали для мене не просто інструментом, а способом розмовляти зі світом.</p>
                 <p>Моя поезія поєднує глибокі образи та емоційну експресію: від воєнної та філософської лірики до особистих переживань і соціальних тем. Крім віршів, я створюю оповідання та невеликі прозові форми, експериментую з жанрами і стилями, прагнучи передати у тексті живу енергію думки та почуття.</p>
@@ -426,14 +231,38 @@
         </div>
     </section>
 
+    <section id="quotes">
+        <h2 class="section-title">Думки та Цитати</h2>
+        <div class="quotes-grid">
+            <div class="quote-card">
+                <i class="fas fa-quote-right"></i>
+                <p class="quote-text">«Будь-яка влада, яка працює проти націоналізму і не ухвалює національні закони, не дає правильні посили — діє проти нації.»</p>
+            </div>
+            <div class="quote-card">
+                <i class="fas fa-quote-right"></i>
+                <p class="quote-text">«Не пора, не пора малоросам служить —<br>Пора, пора націоналізм приймить.»</p>
+            </div>
+            <div class="quote-card">
+                <i class="fas fa-quote-right"></i>
+                <p class="quote-text">«Українці — це невмируща нація з поламаними хребтами.»</p>
+            </div>
+            <div class="quote-card">
+                <i class="fas fa-quote-right"></i>
+                <p class="quote-text">«Суть не в тому, до якої ти належиш конфесії — чи ти греко-католик, чи ти римо-католик, чи ти язичник, чи ти православний, невіглас чи невіруючий. Суть в тому, що ти є русин — бо говір твій руський.»</p>
+            </div>
+            <div class="quote-card">
+                <i class="fas fa-quote-right"></i>
+                <p class="quote-text">«Спочатку була руська, потім церковно-словʼянська, потім польська, затім російська, знов не руська церковно-словʼянська, затім російська знову, так і досі жиє...<br>І війна та буде вічна, вічна як життя.<br>Та не забувайте, браття мої — руська дім мого і вашого буття.»</p>
+            </div>
+        </div>
+    </section>
+
     <section id="poetry">
         <h2 class="section-title">Вибрана Поезія</h2>
         <div class="poetry-grid">
-            
             <div class="poem-card">
                 <h3>Чорні крила кохання</h3>
-                <div class="poem-text">
-Чорні крила кохання накривають мене.
+                <div class="poem-text">Чорні крила кохання накривають мене.
 Я знову не спав, чекаю тебе.
 Ця ностальгія накриває мене.
 Я втратив свою свідомість,
@@ -460,14 +289,11 @@
 Не бачу і досі в твоїх очах ні смерті, ні зла.
 Та я весь загубився в тобі.
 Я — неначе живу без свого серця,
-воно, напевно, в тобі.
-                </div>
+воно, напевно, в тобі.</div>
             </div>
-
             <div class="poem-card">
                 <h3>Судний день</h3>
-                <div class="poem-text">
-Судний день минув — та не настав,
+                <div class="poem-text">Судний день минув — та не настав,
 Небо горіло, і світ у полумʼї спав
 Я писати хотів, та слова потонули в тумані,
 Обстріли глухі розривали кляту тишу в океані
@@ -494,14 +320,11 @@
 Скільки би не було на мені крові
 Я знаю вона загоїть рани мої
 Лише вона дає силу
-Не було би її вже би викопав могилу
-                </div>
+Не було би її вже би викопав могилу</div>
             </div>
-
             <div class="poem-card">
                 <h3>Серце огортала смута</h3>
-                <div class="poem-text">
-Серце огортала смута,
+                <div class="poem-text">Серце огортала смута,
 До тебе я немов прикутий.
 Без тебе я страждаю, неначе помираю,
 Тіло кровʼю все стікає,
@@ -523,14 +346,11 @@
 Я в тобі згораю, ніби свічка,
 Твоє ім’я — моя душа і звичка.
 Твої губи — мій отруйний рай,
-Вбий мене, але не відпускай.
-                </div>
+Вбий мене, але не відпускай.</div>
             </div>
-
             <div class="poem-card">
                 <h3>Чорні думи полонили мене</h3>
-                <div class="poem-text">
-Чорні думи полонили мене,
+                <div class="poem-text">Чорні думи полонили мене,
 Душа від тіла тікає, вбиває себе.
 Мій погляд мліє у тиші днів,
 Де нікого нема, де ніхто не жалів.
@@ -548,14 +368,11 @@
 Я бачу її у снах —
 Країну миру й добра,
 Державо волі і крові,
-Витвір мистецтва й тепла.
-                </div>
+Витвір мистецтва й тепла.</div>
             </div>
-
             <div class="poem-card">
                 <h3>Блідний погляд і туга</h3>
-                <div class="poem-text">
-Блідний погляд і туга
+                <div class="poem-text">Блідний погляд і туга
 Утрачений без неї сенс життя
 Молитво моя , дім мого буття
 Чом зажмурені мої блакитні оченята ?
@@ -576,14 +393,11 @@
 Турбувалась , ніжно пригорталась
 Очима посміхалась
 Це не просто кохання
-Це цілий люб
-                </div>
+Це цілий люб</div>
             </div>
-
             <div class="poem-card">
                 <h3>Світло гасне</h3>
-                <div class="poem-text">
-Світло гасне — я тримаюсь!
+                <div class="poem-text">Світло гасне — я тримаюсь!
 Помираю, побиваюсь!
 Душу, тіло рве до бою —
 поливають зрадники нас кровʼю!
@@ -599,14 +413,11 @@
 Поїхати? Знайти нову?
 Може, зрадити землю?
 Згинь, дума нечиста!
-Твої руки — загребущі, полонисті!
-                </div>
+Твої руки — загребущі, полонисті!</div>
             </div>
-
-             <div class="poem-card">
+            <div class="poem-card">
                 <h3>З неба лився кривавий дощ</h3>
-                <div class="poem-text">
-З неба лився кривавий дощ, —
+                <div class="poem-text">З неба лився кривавий дощ, —
 мов за вину — прощéння,
 немов сльози грішного вогню
 в очах його — преображéння.
@@ -620,14 +431,11 @@
 образ спогадів в думах лунав.
 Цей образ любові до краю —
 він, неначе, вбивав,
-а я все щастя шукав.
-                </div>
+а я все щастя шукав.</div>
             </div>
-
-             <div class="poem-card">
+            <div class="poem-card">
                 <h3>Чорний кровавий туман</h3>
-                <div class="poem-text">
-Чорний кровавий туман
+                <div class="poem-text">Чорний кровавий туман
 Хлопець що створений із ран
 Стікав кровʼю поволі
 На обличчі виступала смута, німа і закута.
@@ -645,14 +453,11 @@
 І спита Господь: “Чи любив ти її, синку?”
 А він скаже: “Так, я любив до глибинки.
 Я любив так, що з нею згорів,
-З нею стік кров’ю, з нею й ожив.”
-                </div>
+З нею стік кров’ю, з нею й ожив.”</div>
             </div>
-
             <div class="poem-card">
                 <h3>Місяць й зорі у душі</h3>
-                <div class="poem-text">
-Місяць й зорі у душі
+                <div class="poem-text">Місяць й зорі у душі
 Чом мої румʼяні щічки у тузі
 Чом та посмішка не сяє
 Дівчинонька не забула як її кохаю
@@ -669,14 +474,11 @@
 Вона нова богиня моєї язичницької влади
 Напишу про неї ті балади
 Нехай Велес дає мені її поради
-Я прислухатимусь до неї вічно правда
-                </div>
+Я прислухатимусь до неї вічно правда</div>
             </div>
-
             <div class="poem-card">
                 <h3>Нас ріже кат чи брат</h3>
-                <div class="poem-text">
-Білі ночі , темна смута
+                <div class="poem-text">Білі ночі , темна смута
 В кайданах увесь прикутий
 Все страждаю , все блукаю
 Грішну душу тіло одіймає
@@ -692,21 +494,17 @@
 Бодай в думках Шевченко і Франко
 Поети …де Вороний співав свої сонети
 І мертві і живі і всі вони в сирій землі
-В моїй клятім чорноземі , в моїй цій святій землі
-                </div>
+В моїй клятім чорноземі , в моїй цій святій землі</div>
             </div>
-
         </div>
     </section>
 
     <section id="prose">
         <h2 class="section-title">Історична Проза</h2>
         <div class="prose-wrapper">
-            
             <div class="story-block">
                 <h3>Хмельницька душа</h3>
                 <span class="story-meta">Історичне оповідання</span>
-                
                 <div class="story-content" id="story1">
                     <p>Степ — що покрився мовчанням, темним, похилим закріпаченням, підкоренням селян. Час золотого десятиліття для ляхів та час десятків років поновлення, страждань півдня руського народу, що звуться українцями, нацією незламного огню, нацією бестії без голови…</p>
                     <p>Надворі був квітучий смертями та надії 1648 рік. Відбувався збір Ради в Корсуні, на святій землі. Той час десятиліття без повстань вимагав сильно лідера — вимагав того, хто може без меча, тільки булавою, об’єднати всіх тих козаків, втікачів, повсталих селян, шляхтичів; всіх, хто бачив козаччину побудовою держави, всіх, хто жадав волі, власної мови, країни, власного вишневого садочку, бодай маленький кувалок землі. Але без польського чоботу та гніту…</p>
@@ -734,11 +532,9 @@
                 </div>
                 <div class="read-more-btn" onclick="toggleStory('story1', this)">Читати повністю</div>
             </div>
-
             <div class="story-block">
                 <h3>Віра, мова, традиції</h3>
                 <span class="story-meta">Оповідання про Хрещення Русі</span>
-                
                 <div class="story-content" id="story2">
                     <p>Тихий ранок, йде сильний пористий дощ, злива… Я пробуджуся. Розплющую очі, від крапель дощу, що повільно стікали моїм обличчям. Вдягаю свою довгу одежу. Прямую пішки до долини Поділля.</p>
                     <p>Йдучи я не міг зрозуміти що це такий за запах, наче якось згореного огню, сажі. Аж раптом я згадав що вчора було свято Купайла. День літнього сонцестояння – найдовший день року. Свято сонця, води вогню та родючості… Купайло і Марена – світло й темінь минувшого дню… Дажбог, Ярило, Мокош мої славні боги, славте цю природу, цей врожай майбутній, заберіть русалок цих вельможних до себе у вирій, у вирій тепла…</p>
@@ -773,8 +569,38 @@
                 </div>
                 <div class="read-more-btn" onclick="toggleStory('story2', this)">Читати повністю</div>
             </div>
-
         </div>
+    </section>
+
+    <section id="articles">
+        <h2 class="section-title">Статті та Думки</h2>
+        <div class="articles-grid">
+            <div class="article-card">
+                <h3>Націоналізм як фундамент</h3>
+                <p>Роздуми про важливість національної ідеї в сучасному світі...</p>
+                <a href="#" class="article-link">Читати далі &rarr;</a>
+            </div>
+            <div class="article-card">
+                <h3>Історія не пробачає забуття</h3>
+                <p>Чому ми повинні пам'ятати уроки минулого, щоб не втратити майбутнє...</p>
+                <a href="#" class="article-link">Читати далі &rarr;</a>
+            </div>
+            <div class="article-card">
+                <h3>Мова — кордон нації</h3>
+                <p>Як мовне питання визначає нашу ідентичність та безпеку...</p>
+                <a href="#" class="article-link">Читати далі &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="news">
+        <h2 class="section-title">Події та Новини</h2>
+        <div class="events-container">
+            <div class="event-item">
+                <div class="event-date">20 листопада</div>
+                <div class="event-desc">Читання віршів у Києві. Літературний вечір, присвячений сучасній поезії.</div>
+            </div>
+            </div>
     </section>
 
     <section id="contact">
@@ -798,12 +624,9 @@
     <button onclick="topFunction()" id="backToTop" title="Вгору"><i class="fas fa-arrow-up"></i></button>
 
     <script>
-        // --- 1. Розкриття тексту оповідань ---
         function toggleStory(id, btn) {
             const content = document.getElementById(id);
-            
             content.classList.toggle('expanded');
-            
             if (content.classList.contains('expanded')) {
                 btn.textContent = "Згорнути";
             } else {
@@ -812,27 +635,21 @@
             }
         }
 
-        // --- 2. Плавна прокрутка для меню ---
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
             });
         });
 
-        // --- 3. Індикатор прокрутки та Кнопка "Вгору" ---
         window.onscroll = function() {scrollFunction()};
 
         function scrollFunction() {
-            // Індикатор
             var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             var scrolled = (winScroll / height) * 100;
             document.getElementById("myBar").style.width = scrolled + "%";
 
-            // Кнопка "Вгору"
             var mybutton = document.getElementById("backToTop");
             if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
                 mybutton.style.display = "block";
@@ -842,11 +659,10 @@
         }
 
         function topFunction() {
-            document.body.scrollTop = 0; // Для Safari
-            document.documentElement.scrollTop = 0; // Для Chrome, Firefox, IE і Opera
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
         }
 
-        // --- 4. Ефект друкарської машинки ---
         const text = "Поезія. Проза. Історична пам'ять.";
         const heroTextElement = document.getElementById('hero-text');
         let i = 0;
@@ -855,16 +671,12 @@
             if (i < text.length) {
                 heroTextElement.innerHTML += text.charAt(i);
                 i++;
-                setTimeout(typeWriter, 100); // Швидкість друку
+                setTimeout(typeWriter, 100);
             } else {
-                // Додаємо курсор в кінці
                 heroTextElement.innerHTML += '<span class="typing-cursor">&nbsp;</span>';
             }
         }
-        
-        // Запуск ефекту після завантаження сторінки
         window.onload = typeWriter;
-
     </script>
 </body>
 </html>
