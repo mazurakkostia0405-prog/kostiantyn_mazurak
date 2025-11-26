@@ -14,13 +14,13 @@
 
     <style>
         :root {
-            --bg-color: #080808;
+            --bg-color: #050505;
             --text-main: #e6e6e6;
-            --text-muted: #a0a0a0;
+            --text-muted: #888;
             --gold: #d4af37;
             --gold-dim: #8a7040;
-            --glass-bg: rgba(20, 20, 20, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.05);
+            --glass-bg: rgba(20, 20, 20, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
             
             --font-display: 'Cinzel', serif;
             --font-body: 'Cormorant Garamond', serif;
@@ -36,86 +36,94 @@
             font-family: var(--font-body);
             line-height: 1.8;
             overflow-x: hidden;
-            font-size: 20px; /* Трохи збільшений шрифт для читабельності */
+            font-size: 20px;
         }
 
-        /* Texture Overlay (Noise) */
+        /* Texture Overlay */
         body::after {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
-            pointer-events: none; z-index: 9999; opacity: 0.5; mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 9999; opacity: 0.4; mix-blend-mode: overlay;
         }
 
-        ::-webkit-scrollbar { width: 5px; }
+        /* Preloader */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; 
+            display: flex; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s;
+        }
+        .loader-text {
+            font-family: var(--font-display); font-size: 2rem; letter-spacing: 5px; color: var(--gold);
+            animation: pulse 2s infinite;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
         h1, h2, h3 { font-family: var(--font-display); text-transform: uppercase; letter-spacing: 2px; font-weight: 400; }
-        a { text-decoration: none; color: inherit; transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        a { text-decoration: none; color: inherit; transition: 0.3s ease; }
 
-        /* --- Header --- */
+        /* --- Header (Smart) --- */
         header {
-            position: fixed; top: 0; width: 100%; padding: 25px 5%;
+            position: fixed; top: 0; width: 100%; padding: 20px 5%;
             display: flex; justify-content: space-between; align-items: center; z-index: 1000;
-            background: rgba(8, 8, 8, 0.8); backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            transition: 0.4s;
+            background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.4s ease, padding 0.4s ease;
         }
+        header.hidden { transform: translateY(-100%); }
         .logo { font-size: 1.4rem; color: var(--gold); font-weight: 600; letter-spacing: 3px; }
-        nav ul { display: flex; gap: 30px; }
-        nav a { font-family: var(--font-ui); font-size: 0.7rem; color: #bbb; letter-spacing: 1.5px; text-transform: uppercase; }
-        nav a:hover { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        
+        nav ul { display: flex; gap: 35px; }
+        nav a { 
+            font-family: var(--font-ui); font-size: 0.75rem; color: #bbb; letter-spacing: 1.5px; text-transform: uppercase; position: relative; 
+        }
+        nav a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 1px; background: var(--gold); transition: 0.3s; }
+        nav a:hover { color: #fff; }
+        nav a:hover::after { width: 100%; }
 
         /* --- Hero --- */
         .hero {
             height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative;
-            overflow: hidden;
         }
         .hero-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 120%;
             background: url('https://images.unsplash.com/photo-1457369804613-52c61a468e7d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;
-            filter: brightness(0.4) contrast(1.1); z-index: -1;
-            mask-image: linear-gradient(to bottom, black 80%, transparent 100%); /* Плавне зникнення знизу */
-            -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+            filter: brightness(0.35) contrast(1.1); z-index: -1;
+            mask-image: linear-gradient(to bottom, black 80%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
         }
         .hero h1 { 
-            font-size: 5rem; color: #fff; margin-bottom: 20px; 
-            text-shadow: 0 10px 30px rgba(0,0,0,0.8); 
-            animation: fadeIn 1.5s ease forwards; opacity: 0; transform: translateY(20px);
+            font-size: 5rem; color: #fff; margin-bottom: 20px; text-shadow: 0 10px 40px rgba(0,0,0,0.9); 
+            opacity: 0; transform: translateY(30px); animation: fadeUp 1s ease forwards 0.5s;
         }
-        .hero p { font-family: var(--font-ui); font-size: 0.9rem; color: var(--gold); letter-spacing: 6px; margin-bottom: 50px; text-transform: uppercase; opacity: 0; animation: fadeIn 1.5s ease forwards 0.5s; }
-        
+        .hero p { 
+            font-family: var(--font-ui); font-size: 0.9rem; color: var(--gold); letter-spacing: 6px; 
+            margin-bottom: 50px; text-transform: uppercase; opacity: 0; animation: fadeUp 1s ease forwards 0.8s;
+        }
         .btn {
-            padding: 15px 40px; border: 1px solid var(--gold); color: var(--gold); font-family: var(--font-ui); 
-            text-transform: uppercase; letter-spacing: 2px; font-size: 0.75rem; background: transparent; cursor: pointer; 
-            transition: 0.4s; position: relative; overflow: hidden; z-index: 1;
+            padding: 15px 45px; border: 1px solid var(--gold); color: var(--gold); font-family: var(--font-ui); 
+            text-transform: uppercase; letter-spacing: 2px; font-size: 0.75rem; background: transparent; 
+            transition: 0.4s; position: relative; overflow: hidden; z-index: 1; cursor: pointer;
         }
-        .btn::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 0%; height: 100%; background: var(--gold); 
-            transition: 0.4s ease; z-index: -1;
-        }
+        .btn::before { content: ''; position: absolute; top: 0; left: 0; width: 0%; height: 100%; background: var(--gold); transition: 0.4s ease; z-index: -1; }
         .btn:hover { color: #000; }
         .btn:hover::before { width: 100%; }
 
-        /* --- SEPARATORS (Natural Blending) --- */
+        /* --- SEPARATORS --- */
         .separator {
-            height: 600px; width: 100%; position: relative; z-index: 0;
+            height: 500px; width: 100%; position: relative; z-index: 0;
             background-attachment: fixed; background-position: center; background-size: cover;
-            display: flex; align-items: center; justify-content: center;
-            margin: 50px 0;
+            display: flex; align-items: center; justify-content: center; margin: 50px 0;
         }
-        /* Магія плавного переходу (Gradient Masking) */
         .separator::after {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(to bottom, var(--bg-color) 0%, transparent 20%, transparent 80%, var(--bg-color) 100%);
             pointer-events: none;
         }
-        .separator h2 {
-            position: relative; z-index: 2; font-size: 3.5rem; color: rgba(255,255,255,0.9); 
-            text-shadow: 0 10px 20px rgba(0,0,0,0.9); letter-spacing: 5px;
-        }
-
+        .separator h2 { position: relative; z-index: 2; font-size: 3rem; color: rgba(255,255,255,0.95); text-shadow: 0 10px 20px rgba(0,0,0,0.9); letter-spacing: 5px; text-align: center; }
+        
         .sep-1 { background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'); }
         .sep-2 { background-image: url('https://images.unsplash.com/photo-1461360228754-6e81c478b882?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'); }
         .sep-3 { background-image: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'); }
@@ -128,108 +136,93 @@
 
         /* --- About --- */
         .about-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: center; }
-        .about-img-wrapper { position: relative; padding: 20px; border: 1px solid var(--glass-border); }
         .about-img {
             height: 600px; width: 100%; background: url('photo.jpg') center/cover; 
-            filter: grayscale(100%) contrast(1.1); transition: 0.7s ease;
+            filter: grayscale(100%) contrast(1.1); transition: 0.7s ease; border: 1px solid var(--glass-border);
         }
         .about-img:hover { filter: grayscale(0%); }
-        .about-text p { font-size: 1.25rem; color: #d0d0d0; margin-bottom: 25px; text-align: justify; font-weight: 300; }
+        .about-text p { font-size: 1.25rem; color: #ccc; margin-bottom: 25px; text-align: justify; font-weight: 300; }
 
-        /* --- Poetry (Glassmorphism) --- */
-        .poetry-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 40px; }
+        /* --- Poetry (3D Tilt Effect) --- */
+        .poetry-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 40px; perspective: 1000px; }
+        
         .poem-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px); border: 1px solid var(--glass-border);
             padding: 50px 40px; height: 550px; display: flex; flex-direction: column;
-            transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.1s ease, box-shadow 0.3s ease, border-color 0.3s ease; /* Швидка трансформація для 3D */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform-style: preserve-3d;
         }
-        .poem-card:hover { 
-            transform: translateY(-10px); 
-            border-color: var(--gold-dim); 
-            box-shadow: 0 20px 50px rgba(212, 175, 55, 0.1);
-            background: rgba(25, 25, 25, 0.8);
+        
+        /* Декоративний елемент всередині картки */
+        .poem-card::before {
+            content: ''; position: absolute; top: 20px; right: 20px; width: 40px; height: 40px;
+            border-top: 1px solid var(--gold-dim); border-right: 1px solid var(--gold-dim); opacity: 0.5; transition: 0.3s;
         }
+        .poem-card:hover::before { width: 100%; height: 100%; top: 0; right: 0; border-color: var(--gold); opacity: 0.1; }
+
         .poem-card h3 { 
             font-size: 1.6rem; color: #fff; margin-bottom: 20px; 
-            border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; font-family: var(--font-body); font-style: italic; 
+            border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; font-style: italic; transform: translateZ(20px);
         }
         .poem-content { 
             flex-grow: 1; overflow-y: auto; white-space: pre-wrap; color: #ccc; 
-            line-height: 1.6; font-style: italic; font-size: 1.15rem; 
+            line-height: 1.6; font-style: italic; font-size: 1.15rem; transform: translateZ(10px);
         }
 
         /* --- Quotes --- */
         .quotes-grid { display: grid; gap: 40px; max-width: 1000px; margin: 0 auto; }
         .quote-item {
-            text-align: center; padding: 40px; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);
-            transition: 0.3s;
+            text-align: center; padding: 40px; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); transition: 0.3s;
         }
-        .quote-item:hover { border-color: var(--gold-dim); }
-        .quote-text { font-size: 1.8rem; font-style: italic; color: #fff; margin-bottom: 20px; line-height: 1.4; font-family: var(--font-body); }
+        .quote-item:hover { border-color: var(--gold-dim); background: rgba(255,255,255,0.01); }
+        .quote-text { font-size: 1.8rem; font-style: italic; color: #fff; margin-bottom: 20px; line-height: 1.4; }
         .quote-note { font-family: var(--font-ui); font-size: 0.7rem; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; }
 
-        /* --- Prose (Book Style) --- */
+        /* --- Prose --- */
         .prose-wrapper { display: flex; flex-direction: column; gap: 100px; }
         .story-block {
             background: #111; border: 1px solid var(--glass-border); padding: 0; 
-            display: grid; grid-template-columns: 1fr; overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4); overflow: hidden;
         }
         .story-padding { padding: 60px 80px; }
-        
         .story-block h3 { font-size: 2.5rem; color: #fff; margin-bottom: 5px; }
-        .story-meta { font-family: var(--font-ui); color: var(--gold); font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 40px; }
-        
+        .story-meta { 
+            font-family: var(--font-ui); color: var(--gold); font-size: 0.75rem; letter-spacing: 2px; 
+            text-transform: uppercase; display: flex; justify-content: space-between; margin-bottom: 40px; 
+        }
         .story-content {
             font-size: 1.25rem; line-height: 1.9; color: #ccc; text-align: justify;
             max-height: 350px; overflow: hidden; position: relative; transition: max-height 1s cubic-bezier(0.25, 1, 0.5, 1);
         }
         .story-content.expanded { max-height: 20000px; }
-        
-        /* Буквиця */
         .story-content p:first-of-type::first-letter {
             float: left; font-size: 4.5rem; line-height: 0.75; padding-right: 15px; color: var(--gold); font-family: var(--font-display);
         }
         .story-content p { margin-bottom: 1.5rem; }
-
         .fade-overlay {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 200px;
             background: linear-gradient(to top, #111, transparent); pointer-events: none; transition: 0.5s;
         }
         .story-content.expanded .fade-overlay { opacity: 0; }
-
         .btn-read {
             margin-top: 30px; border: none; color: var(--gold); font-family: var(--font-ui); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; background: transparent; cursor: pointer; transition: 0.3s; border-bottom: 1px solid transparent;
         }
         .btn-read:hover { border-bottom-color: var(--gold); color: #fff; }
 
         /* --- Journal --- */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; perspective: 1000px; }
         .article-card {
-            padding: 40px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.02); transition: 0.3s;
+            padding: 40px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.02); transition: transform 0.1s ease, background 0.3s;
+            transform-style: preserve-3d;
         }
         .article-card:hover { background: rgba(255,255,255,0.04); border-color: var(--gold-dim); }
-        .article-date { font-family: var(--font-ui); font-size: 0.7rem; color: var(--gold); margin-bottom: 15px; display: block; }
-        .article-title { font-size: 1.5rem; margin-bottom: 20px; color: #fff; line-height: 1.3; }
+        .article-date { font-family: var(--font-ui); font-size: 0.7rem; color: var(--gold); margin-bottom: 15px; display: block; transform: translateZ(20px); }
+        .article-title { font-size: 1.5rem; margin-bottom: 20px; color: #fff; line-height: 1.3; transform: translateZ(30px); }
         
         .news-item { padding: 25px 0; border-bottom: 1px solid var(--glass-border); display: flex; align-items: baseline; gap: 20px; }
         .news-date { font-weight: 600; color: var(--gold); font-family: var(--font-ui); font-size: 0.9rem; min-width: 120px; }
-
-        /* --- Newsletter --- */
-        #newsletter {
-            padding: 100px 20px; text-align: center; border-top: 1px solid var(--glass-border); background: #0a0a0a;
-        }
-        .newsletter form { margin-top: 40px; display: inline-flex; gap: 0; border: 1px solid var(--glass-border); }
-        .newsletter input { 
-            padding: 20px; background: transparent; border: none; color: #fff; outline: none; width: 350px; font-family: var(--font-ui);
-        }
-        .newsletter button { 
-            padding: 20px 40px; background: var(--gold); border: none; font-weight: 600; cursor: pointer; text-transform: uppercase; font-family: var(--font-ui); font-size: 0.8rem; letter-spacing: 1px; transition: 0.3s;
-        }
-        .newsletter button:hover { background: #fff; color: #000; }
 
         /* --- Contact --- */
         .socials { display: flex; justify-content: center; gap: 30px; margin-top: 50px; }
@@ -241,17 +234,16 @@
 
         footer { padding: 50px; text-align: center; font-size: 0.75rem; color: #555; border-top: 1px solid #151515; font-family: var(--font-ui); letter-spacing: 2px; }
 
-        /* Reveal Animation */
+        /* Utils */
         .reveal { opacity: 0; transform: translateY(40px); transition: 0.8s cubic-bezier(0.215, 0.610, 0.355, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
-        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
         @media (max-width: 768px) {
             .hero h1 { font-size: 3rem; }
             .about-grid, .grid-2, .poetry-grid { grid-template-columns: 1fr; }
             .story-padding { padding: 40px 20px; }
-            .newsletter input { width: 100%; }
-            .newsletter form { flex-direction: column; width: 100%; }
             nav { display: none; }
             section { padding: 80px 20px; }
         }
@@ -259,11 +251,15 @@
 </head>
 <body>
 
-    <header>
+    <div id="preloader">
+        <div class="loader-text">K. MAZURAK</div>
+    </div>
+
+    <header id="main-header">
         <div class="logo">K. MAZURAK</div>
         <nav>
             <ul>
-                <li><a href="#about">Про автора</a></li>
+                <li><a href="#about">Автор</a></li>
                 <li><a href="#poetry">Поезія</a></li>
                 <li><a href="#prose">Проза</a></li>
                 <li><a href="#quotes">Думки</a></li>
@@ -304,7 +300,7 @@
 
     <section id="poetry">
         <div class="poetry-grid">
-            <div class="poem-card reveal">
+            <div class="poem-card reveal tilt-card">
                 <h3>Чорні крила кохання</h3>
                 <div class="poem-content">Чорні крила кохання накривають мене.
 Я знову не спав, чекаю тебе.
@@ -350,7 +346,7 @@
 бо твоє кохання — моє воскресіння.</div>
             </div>
 
-            <div class="poem-card reveal">
+            <div class="poem-card reveal tilt-card">
                 <h3>Судний день</h3>
                 <div class="poem-content">Судний день минув — та не настав,
 Небо горіло, і світ у полумʼї спав
@@ -392,7 +388,7 @@
 рідну кохану свою</div>
             </div>
 
-            <div class="poem-card reveal">
+            <div class="poem-card reveal tilt-card">
                 <h3>Чорні думи</h3>
                 <div class="poem-content">Чорні думи полонили мене,
 Душа від тіла тікає, вбиває себе.
@@ -430,7 +426,7 @@
 Як покохати іншу, коли ти — моя?</div>
             </div>
 
-            <div class="poem-card reveal">
+            <div class="poem-card reveal tilt-card">
                 <h3>Нас ріже кат чи брат</h3>
                 <div class="poem-content">Білі ночі , темна смута
 В кайданах увесь прикутий
@@ -466,7 +462,7 @@
 Доріже нас сама…</div>
             </div>
 
-            <div class="poem-card reveal">
+            <div class="poem-card reveal tilt-card">
                 <h3>З неба лився кривавий дощ</h3>
                 <div class="poem-content">З неба лився кривавий дощ, —
 мов за вину — прощéння,
@@ -494,7 +490,7 @@
 бо в кожнім болі — рух.</div>
             </div>
 
-            <div class="poem-card reveal">
+            <div class="poem-card reveal tilt-card">
                 <h3>Серце огортала смута</h3>
                 <div class="poem-content">Серце огортала смута,
 До тебе я немов прикутий.
@@ -533,7 +529,7 @@
 Будь моєю дружиною й супутницею ти — назавжди.</div>
             </div>
 
-            <div class="poem-card reveal">
+            <div class="poem-card reveal tilt-card">
                 <h3>Чорний кровавий туман</h3>
                 <div class="poem-content">Чорний кровавий туман
 Хлопець що створений із ран
@@ -556,7 +552,7 @@
 З нею стік кров’ю, з нею й ожив.”</div>
             </div>
             
-            <div class="poem-card reveal">
+            <div class="poem-card reveal tilt-card">
                 <h3>Блідний погляд і туга</h3>
                 <div class="poem-content">Блідний погляд і туга
 Утрачений без неї сенс життя
@@ -600,7 +596,7 @@
 Просто смертельно кохай…</div>
             </div>
             
-            <div class="poem-card reveal">
+            <div class="poem-card reveal tilt-card">
                 <h3>Місяць й зорі у душі</h3>
                 <div class="poem-content">Місяць й зорі у душі
 Чом мої румʼяні щічки у тузі
@@ -629,7 +625,7 @@
 А я все не забуваю ці блакитні очки</div>
             </div>
             
-            <div class="poem-card reveal">
+            <div class="poem-card reveal tilt-card">
                 <h3>Світло гасне</h3>
                 <div class="poem-content">Світло гасне — я тримаюсь!
 Помираю, побиваюсь!
@@ -697,7 +693,7 @@
             <div class="story-block reveal">
                 <div class="story-padding">
                     <h3>Хмельницька душа</h3>
-                    <span class="story-meta">Історичне оповідання</span>
+                    <span class="story-meta">Історичне оповідання &bull; 5 хв читання</span>
                     <div class="story-content" id="story1">
                         <p>Степ — що покрився мовчанням, темним, похилим закріпаченням, підкоренням селян. Час золотого десятиліття для ляхів та час десятків років поновлення, страждань півдня руського народу, що звуться українцями, нацією незламного огню, нацією бестії без голови…</p>
                         <p>Надворі був квітучий смертями та надії 1648 рік. Відбувався збір Ради в Корсуні, на святій землі. Той час десятиліття без повстань вимагав сильно лідера — вимагав того, хто може без меча, тільки булавою, об’єднати всіх тих козаків, втікачів, повсталих селян, шляхтичів; всіх, хто бачив козаччину побудовою держави, всіх, хто жадав волі, власної мови, країни, власного вишневого садочку, бодай маленький кувалок землі. Але без польського чоботу та гніту…</p>
@@ -731,7 +727,7 @@
             <div class="story-block reveal">
                 <div class="story-padding">
                     <h3>Віра, мова, традиції</h3>
-                    <span class="story-meta">Оповідання про Хрещення Русі</span>
+                    <span class="story-meta">Оповідання про Хрещення Русі &bull; 7 хв читання</span>
                     <div class="story-content" id="story2">
                         <p>Тихий ранок, йде сильний пористий дощ, злива… Я пробуджуся. Розплющую очі, від крапель дощу, що повільно стікали моїм обличчям. Вдягаю свою довгу одежу. Прямую пішки до долини Поділля.</p>
                         <p>Йдучи я не міг зрозуміти що це такий за запах, наче якось згореного огню, сажі. Аж раптом я згадав що вчора було свято Купайла. День літнього сонцестояння – найдовший день року. Свято сонця, води вогню та родючості… Купайло і Марена – світло й темінь минувшого дню… Дажбог, Ярило, Мокош мої славні боги, славте цю природу, цей врожай майбутній, заберіть русалок цих вельможних до себе у вирій, у вирій тепла…</p>
@@ -810,13 +806,13 @@
             <div class="line"></div>
         </div>
         <div class="grid-2">
-            <div class="article-card">
-                <span class="article-date">26 Листопада 2025</span>
+            <div class="article-card tilt-card">
+                <span class="article-date">26 Листопада 2025 &bull; 4 хв</span>
                 <h3 class="article-title">Націоналізм як фундамент</h3>
                 <a href="#" style="color:var(--gold); font-weight:600; font-size:0.8rem; text-transform:uppercase;">Читати статтю</a>
             </div>
-            <div class="article-card">
-                <span class="article-date">10 Листопада 2025</span>
+            <div class="article-card tilt-card">
+                <span class="article-date">10 Листопада 2025 &bull; 6 хв</span>
                 <h3 class="article-title">Мова — кордон нації</h3>
                 <a href="#" style="color:var(--gold); font-weight:600; font-size:0.8rem; text-transform:uppercase;">Читати статтю</a>
             </div>
@@ -855,7 +851,14 @@
     </footer>
 
     <script>
-        // Reveal Animation
+        // Preloader
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            preloader.style.opacity = '0';
+            preloader.style.visibility = 'hidden';
+        });
+
+        // Scroll Reveal
         function reveal() {
             var reveals = document.querySelectorAll(".reveal");
             for (var i = 0; i < reveals.length; i++) {
@@ -868,12 +871,45 @@
         }
         window.addEventListener("scroll", reveal);
         
+        // Smart Navbar
+        let lastScrollTop = 0;
+        const header = document.getElementById("main-header");
+        window.addEventListener("scroll", function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop) {
+                header.classList.add("hidden");
+            } else {
+                header.classList.remove("hidden");
+            }
+            lastScrollTop = scrollTop;
+        });
+
+        // 3D Tilt Effect for Cards
+        const cards = document.querySelectorAll('.tilt-card');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -5; // Max tilt angle
+                const rotateY = ((x - centerX) / centerX) * 5;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+            });
+        });
+
         // Typing Effect
         const text = "Поезія. Проза. Історична пам'ять.";
         let i = 0;
         function typeWriter() {
             if (i < text.length) {
-                // document.getElementById('hero-text').innerHTML += text.charAt(i); // Removed as per previous request simplification, adding back if needed
+                // document.getElementById('hero-text').innerHTML += text.charAt(i);
                 i++;
                 setTimeout(typeWriter, 40);
             }
@@ -886,7 +922,7 @@
             btn.textContent = content.classList.contains('expanded') ? "Згорнути" : "Читати повністю";
         }
 
-        reveal(); // Trigger once on load
+        reveal(); 
     </script>
 </body>
 </html>
