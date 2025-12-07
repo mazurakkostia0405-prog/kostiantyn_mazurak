@@ -1,313 +1,374 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="uk" class="no-js">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <meta name="description" content="Офіційний сайт поета та прозаїка Костянтина Мазурака.">
+    <meta name="description" content="Костянтин Мазурак — сучасний український поет та прозаїк. Філософська лірика, історична проза, національна ідея.">
+    <meta name="keywords" content="поезія, проза, Костянтин Мазурак, література, Україна, історія">
+    <meta name="author" content="Костянтин Мазурак">
+    <meta property="og:title" content="Костянтин Мазурак | Official Portfolio">
+    <meta property="og:image" content="photo.jpg">
+    
     <title>Костянтин Мазурак | Поет і Прозаїк</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400;1,500&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        /* --- CORE VARIABLES --- */
         :root {
-            --bg-color: #050505;
-            --text-main: #e6e6e6;
-            --text-muted: #888;
+            --bg-dark: #050505;
+            --bg-card: rgba(20, 20, 20, 0.6);
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
             --gold: #d4af37;
+            --gold-light: #f9d878;
             --gold-dim: #8a7040;
-            --glass-bg: rgba(20, 20, 20, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            
+            --border-light: rgba(255, 255, 255, 0.08);
             --font-display: 'Cinzel', serif;
             --font-body: 'Cormorant Garamond', serif;
             --font-ui: 'Montserrat', sans-serif;
+            --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        /* --- RESET & BASE --- */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        html { scroll-behavior: smooth; font-size: 16px; }
         
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-dark);
             color: var(--text-main);
             font-family: var(--font-body);
             line-height: 1.8;
             overflow-x: hidden;
-            font-size: 20px;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Texture Overlay */
-        body::after {
-            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none; z-index: 9999; opacity: 0.4; mix-blend-mode: overlay;
+        /* Grain Overlay */
+        .grain {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 9000; opacity: 0.4; mix-blend-mode: overlay;
         }
+
+        /* Canvas Background */
+        #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+
+        /* Typography */
+        h1, h2, h3, h4 { font-family: var(--font-display); text-transform: uppercase; font-weight: 400; letter-spacing: 2px; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        p { margin-bottom: 1.5rem; font-size: 1.25rem; color: #ccc; }
+
+        /* Custom Cursor */
+        .cursor-outer {
+            position: fixed; width: 40px; height: 40px; border: 1px solid rgba(212, 175, 55, 0.5); border-radius: 50%;
+            pointer-events: none; transform: translate(-50%, -50%); z-index: 10000; transition: width 0.3s, height 0.3s, background-color 0.3s;
+            mix-blend-mode: difference;
+        }
+        .cursor-inner {
+            position: fixed; width: 6px; height: 6px; background-color: var(--gold); border-radius: 50%;
+            pointer-events: none; transform: translate(-50%, -50%); z-index: 10000; transition: transform 0.1s;
+        }
+        body.hovering .cursor-outer { width: 60px; height: 60px; background-color: rgba(212, 175, 55, 0.1); border-color: transparent; }
 
         /* Preloader */
         #preloader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; 
-            display: flex; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 11000;
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+            transition: transform 1s var(--ease-out);
         }
-        .loader-text {
-            font-family: var(--font-display); font-size: 2rem; letter-spacing: 5px; color: var(--gold);
-            animation: pulse 2s infinite;
-        }
+        .preloader-text { font-family: var(--font-display); font-size: 3rem; color: var(--gold); overflow: hidden; text-transform: uppercase; }
+        .preloader-text span { display: inline-block; transform: translateY(100%); animation: textReveal 1s var(--ease-out) forwards; }
+        .preloader-line { width: 0; height: 2px; background: var(--gold); margin-top: 20px; animation: lineGrow 1.5s var(--ease-out) forwards 0.5s; }
+        .preloader-hide { transform: translateY(-100%); }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
-
-        h1, h2, h3 { font-family: var(--font-display); text-transform: uppercase; letter-spacing: 2px; font-weight: 400; }
-        a { text-decoration: none; color: inherit; transition: 0.3s ease; }
-
-        /* --- Header (Smart) --- */
+        /* --- HEADER --- */
         header {
-            position: fixed; top: 0; width: 100%; padding: 20px 5%;
+            position: fixed; top: 0; left: 0; width: 100%; padding: 30px 5%;
             display: flex; justify-content: space-between; align-items: center; z-index: 1000;
-            background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            transition: transform 0.4s ease, padding 0.4s ease;
+            transition: all 0.5s var(--ease-out); mix-blend-mode: difference;
         }
-        header.hidden { transform: translateY(-100%); }
-        .logo { font-size: 1.4rem; color: var(--gold); font-weight: 600; letter-spacing: 3px; }
+        header.scrolled { padding: 15px 5%; background: rgba(5,5,5,0.8); backdrop-filter: blur(20px); mix-blend-mode: normal; border-bottom: 1px solid var(--border-light); }
         
-        nav ul { display: flex; gap: 35px; }
-        nav a { 
-            font-family: var(--font-ui); font-size: 0.75rem; color: #bbb; letter-spacing: 1.5px; text-transform: uppercase; position: relative; 
-        }
-        nav a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 1px; background: var(--gold); transition: 0.3s; }
-        nav a:hover { color: #fff; }
-        nav a:hover::after { width: 100%; }
+        .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: 4px; color: #fff; text-transform: uppercase; }
+        .logo span { color: var(--gold); }
 
-        /* --- Hero --- */
+        nav ul { display: flex; gap: 40px; }
+        .nav-link {
+            font-family: var(--font-ui); font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: #fff; position: relative; padding: 10px 0;
+        }
+        .nav-link::before {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--gold); transition: width 0.3s ease;
+        }
+        .nav-link:hover::before { width: 100%; }
+
+        /* --- HERO SECTION --- */
         .hero {
-            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative;
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; overflow: hidden;
         }
-        .hero-bg {
-            position: absolute; top: 0; left: 0; width: 100%; height: 120%;
-            background: url('https://images.unsplash.com/photo-1457369804613-52c61a468e7d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;
-            filter: brightness(0.35) contrast(1.1); z-index: -1;
-            mask-image: linear-gradient(to bottom, black 80%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-        }
-        .hero h1 { 
-            font-size: 5rem; color: #fff; margin-bottom: 20px; text-shadow: 0 10px 40px rgba(0,0,0,0.9); 
-            opacity: 0; transform: translateY(30px); animation: fadeUp 1s ease forwards 0.5s;
-        }
-        .hero p { 
-            font-family: var(--font-ui); font-size: 0.9rem; color: var(--gold); letter-spacing: 6px; 
-            margin-bottom: 50px; text-transform: uppercase; opacity: 0; animation: fadeUp 1s ease forwards 0.8s;
-        }
-        .btn {
-            padding: 15px 45px; border: 1px solid var(--gold); color: var(--gold); font-family: var(--font-ui); 
-            text-transform: uppercase; letter-spacing: 2px; font-size: 0.75rem; background: transparent; 
-            transition: 0.4s; position: relative; overflow: hidden; z-index: 1; cursor: pointer;
-        }
-        .btn::before { content: ''; position: absolute; top: 0; left: 0; width: 0%; height: 100%; background: var(--gold); transition: 0.4s ease; z-index: -1; }
-        .btn:hover { color: #000; }
-        .btn:hover::before { width: 100%; }
-
-        /* --- SEPARATORS --- */
-        .separator {
-            height: 500px; width: 100%; position: relative; z-index: 0;
-            background-attachment: fixed; background-position: center; background-size: cover;
-            display: flex; align-items: center; justify-content: center; margin: 50px 0;
-        }
-        .separator::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, var(--bg-color) 0%, transparent 20%, transparent 80%, var(--bg-color) 100%);
-            pointer-events: none;
-        }
-        .separator h2 { position: relative; z-index: 2; font-size: 3rem; color: rgba(255,255,255,0.95); text-shadow: 0 10px 20px rgba(0,0,0,0.9); letter-spacing: 5px; text-align: center; }
         
-        .sep-1 { background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'); }
-        .sep-2 { background-image: url('https://images.unsplash.com/photo-1461360228754-6e81c478b882?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'); }
-        .sep-3 { background-image: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'); }
+        .hero-title-wrapper { overflow: hidden; margin-bottom: 20px; }
+        .hero h1 {
+            font-size: 5vw; line-height: 1; color: #fff; position: relative;
+            text-shadow: 0 0 20px rgba(0,0,0,0.5); opacity: 0; transform: translateY(100px); animation: fadeInUp 1s var(--ease-out) 1.5s forwards;
+        }
+        
+        /* Glitch Effect on Hover */
+        .glitch-wrapper { position: relative; display: inline-block; }
+        .glitch-wrapper:hover::before, .glitch-wrapper:hover::after {
+            content: attr(data-text); position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: var(--bg-dark);
+        }
+        .glitch-wrapper:hover::before { left: 2px; text-shadow: -1px 0 red; clip: rect(24px, 550px, 90px, 0); animation: glitch-anim 2s infinite linear alternate-reverse; }
+        .glitch-wrapper:hover::after { left: -2px; text-shadow: -1px 0 blue; clip: rect(85px, 550px, 140px, 0); animation: glitch-anim 2s infinite linear alternate-reverse; }
 
-        /* --- Sections --- */
-        section { padding: 120px 8%; position: relative; }
-        .section-header { text-align: center; margin-bottom: 80px; }
-        .section-header h2 { font-size: 2.5rem; color: var(--gold); margin-bottom: 20px; }
-        .line { width: 1px; height: 60px; background: linear-gradient(to bottom, var(--gold), transparent); margin: 0 auto; }
+        .hero-subtitle {
+            font-family: var(--font-ui); font-size: 1rem; color: var(--gold); letter-spacing: 6px; text-transform: uppercase;
+            opacity: 0; animation: fadeIn 1s ease 2s forwards; display: flex; align-items: center; gap: 10px;
+        }
+        .typing-cursor { width: 2px; height: 1em; background: var(--gold); animation: blink 1s infinite; }
 
-        /* --- About --- */
-        .about-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: center; }
+        .scroll-down {
+            position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0; animation: fadeIn 1s ease 2.5s forwards;
+        }
+        .scroll-text { font-family: var(--font-ui); font-size: 0.7rem; letter-spacing: 3px; color: var(--text-muted); }
+        .scroll-line { width: 1px; height: 50px; background: linear-gradient(to bottom, var(--gold), transparent); }
+
+        /* --- STATS SECTION --- */
+        .stats-section {
+            padding: 60px 10%; display: flex; justify-content: space-around; border-bottom: 1px solid var(--border-light); background: rgba(255,255,255,0.02);
+        }
+        .stat-item { text-align: center; opacity: 0; transform: translateY(20px); transition: 0.6s ease; }
+        .stat-number { font-family: var(--font-display); font-size: 3rem; color: var(--gold); display: block; line-height: 1; }
+        .stat-label { font-family: var(--font-ui); font-size: 0.8rem; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; }
+
+        /* --- MARQUEE --- */
+        .marquee-container {
+            width: 100%; overflow: hidden; padding: 40px 0; background: #000; border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light);
+        }
+        .marquee-content {
+            display: flex; gap: 50px; white-space: nowrap; animation: marquee 20s linear infinite;
+        }
+        .marquee-item {
+            font-family: var(--font-display); font-size: 4rem; color: rgba(255,255,255,0.05); -webkit-text-stroke: 1px rgba(212, 175, 55, 0.3); text-transform: uppercase;
+        }
+
+        /* --- SECTIONS --- */
+        section { padding: 150px 8%; position: relative; }
+        
+        .section-header { margin-bottom: 100px; position: relative; }
+        .section-subtitle { font-family: var(--font-ui); font-size: 0.8rem; color: var(--gold); letter-spacing: 4px; text-transform: uppercase; display: block; margin-bottom: 10px; }
+        .section-title { 
+            font-size: 4rem; color: #fff; line-height: 1.1; 
+            background: linear-gradient(to right, #fff, #666); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .title-line { width: 100px; height: 2px; background: var(--gold); margin-top: 30px; }
+
+        /* --- ABOUT --- */
+        .about-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .about-img-box {
+            position: relative; height: 600px; width: 100%; overflow: hidden;
+        }
         .about-img {
-            height: 600px; width: 100%; background: url('photo.jpg') center/cover; 
-            filter: grayscale(100%) contrast(1.1); transition: 0.7s ease; border: 1px solid var(--glass-border);
+            width: 100%; height: 100%; background: url('photo.jpg') center/cover;
+            filter: grayscale(100%); transition: 0.7s ease; transform: scale(1.1);
         }
-        .about-img:hover { filter: grayscale(0%); }
-        .about-text p { font-size: 1.25rem; color: #ccc; margin-bottom: 25px; text-align: justify; font-weight: 300; }
+        .about-img-box:hover .about-img { filter: grayscale(0%); transform: scale(1); }
+        .about-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, #050505); }
 
-        /* --- Poetry (3D Tilt Effect) --- */
-        .poetry-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 40px; perspective: 1000px; }
-        
+        /* --- POETRY (3D CARDS) --- */
+        .poetry-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 40px; }
         .poem-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px); border: 1px solid var(--glass-border);
-            padding: 50px 40px; height: 550px; display: flex; flex-direction: column;
-            transition: transform 0.1s ease, box-shadow 0.3s ease, border-color 0.3s ease; /* Швидка трансформація для 3D */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            transform-style: preserve-3d;
+            background: var(--bg-card); backdrop-filter: blur(10px); border: 1px solid var(--border-light);
+            padding: 50px; height: 600px; display: flex; flex-direction: column; position: relative;
+            transition: transform 0.1s, box-shadow 0.3s; transform-style: preserve-3d;
+        }
+        .poem-card:hover { border-color: var(--gold-dim); }
+        .poem-title { font-size: 1.8rem; margin-bottom: 20px; color: #fff; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .poem-body { 
+            flex-grow: 1; overflow-y: auto; font-size: 1.2rem; line-height: 1.6; color: #ccc; white-space: pre-wrap;
+            scrollbar-width: thin; scrollbar-color: var(--gold) transparent;
+        }
+
+        /* --- PROSE (Editorial) --- */
+        .prose-item {
+            margin-bottom: 100px; position: relative; padding-left: 40px; border-left: 2px solid var(--border-light); transition: 0.3s;
+        }
+        .prose-item:hover { border-left-color: var(--gold); }
+        .prose-title { font-size: 3rem; color: #fff; margin-bottom: 10px; }
+        .prose-meta { font-family: var(--font-ui); color: var(--gold); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 40px; display: block; }
+        .prose-content {
+            font-size: 1.3rem; line-height: 1.9; color: #d0d0d0; max-height: 200px; overflow: hidden; transition: max-height 1s ease; position: relative; text-align: justify;
+        }
+        .prose-content.open { max-height: 20000px; }
+        .prose-content p { margin-bottom: 20px; }
+        
+        /* Drop Cap */
+        .prose-content p:first-of-type::first-letter {
+            float: left; font-size: 5rem; line-height: 0.7; margin-right: 15px; color: var(--gold); font-family: var(--font-display);
         }
         
-        /* Декоративний елемент всередині картки */
-        .poem-card::before {
-            content: ''; position: absolute; top: 20px; right: 20px; width: 40px; height: 40px;
-            border-top: 1px solid var(--gold-dim); border-right: 1px solid var(--gold-dim); opacity: 0.5; transition: 0.3s;
+        .fade-mask {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 100px;
+            background: linear-gradient(transparent, var(--bg-dark)); pointer-events: none; transition: 0.3s;
         }
-        .poem-card:hover::before { width: 100%; height: 100%; top: 0; right: 0; border-color: var(--gold); opacity: 0.1; }
+        .prose-content.open .fade-mask { opacity: 0; }
 
-        .poem-card h3 { 
-            font-size: 1.6rem; color: #fff; margin-bottom: 20px; 
-            border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; font-style: italic; transform: translateZ(20px);
+        /* BUTTONS (Golden Style) */
+        .magnetic-btn {
+            display: inline-block; margin-top: 30px; padding: 15px 35px; 
+            border: 1px solid var(--gold); color: var(--gold);
+            font-family: var(--font-ui); text-transform: uppercase; letter-spacing: 2px; font-size: 0.75rem; 
+            transition: all 0.3s ease; cursor: pointer; background: transparent;
         }
-        .poem-content { 
-            flex-grow: 1; overflow-y: auto; white-space: pre-wrap; color: #ccc; 
-            line-height: 1.6; font-style: italic; font-size: 1.15rem; transform: translateZ(10px);
+        .magnetic-btn:hover { 
+            border-color: var(--gold); color: #000; background: var(--gold); 
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
         }
 
-        /* --- Quotes --- */
-        .quotes-grid { display: grid; gap: 40px; max-width: 1000px; margin: 0 auto; }
-        .quote-item {
-            text-align: center; padding: 40px; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); transition: 0.3s;
+        /* --- QUOTES (Slider Style) --- */
+        .quote-slider { display: flex; overflow-x: auto; gap: 50px; padding-bottom: 50px; scroll-snap-type: x mandatory; }
+        .quote-slider::-webkit-scrollbar { height: 2px; background: #222; }
+        .quote-slider::-webkit-scrollbar-thumb { background: var(--gold); }
+        .quote-card {
+            min-width: 600px; scroll-snap-align: center; background: #0a0a0a; padding: 60px; border: 1px solid var(--border-light); position: relative;
         }
-        .quote-item:hover { border-color: var(--gold-dim); background: rgba(255,255,255,0.01); }
-        .quote-text { font-size: 1.8rem; font-style: italic; color: #fff; margin-bottom: 20px; line-height: 1.4; }
-        .quote-note { font-family: var(--font-ui); font-size: 0.7rem; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; }
+        .quote-icon { position: absolute; top: 30px; left: 30px; font-size: 4rem; color: rgba(255,255,255,0.05); font-family: serif; }
+        .quote-text { font-size: 1.8rem; font-style: italic; color: #fff; line-height: 1.4; position: relative; z-index: 1; }
 
-        /* --- Prose --- */
-        .prose-wrapper { display: flex; flex-direction: column; gap: 100px; }
-        .story-block {
-            background: #111; border: 1px solid var(--glass-border); padding: 0; 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4); overflow: hidden;
+        /* --- CONTACT & FOOTER --- */
+        .contact-section { text-align: center; background: radial-gradient(circle at center, #111, #050505); border-top: 1px solid var(--border-light); }
+        .social-grid { display: flex; justify-content: center; gap: 30px; margin-top: 50px; }
+        .social-item {
+            width: 70px; height: 70px; border: 1px solid var(--border-light); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: #888; font-size: 1.5rem; transition: 0.3s;
         }
-        .story-padding { padding: 60px 80px; }
-        .story-block h3 { font-size: 2.5rem; color: #fff; margin-bottom: 5px; }
-        .story-meta { 
-            font-family: var(--font-ui); color: var(--gold); font-size: 0.75rem; letter-spacing: 2px; 
-            text-transform: uppercase; display: flex; justify-content: space-between; margin-bottom: 40px; 
-        }
-        .story-content {
-            font-size: 1.25rem; line-height: 1.9; color: #ccc; text-align: justify;
-            max-height: 350px; overflow: hidden; position: relative; transition: max-height 1s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-        .story-content.expanded { max-height: 20000px; }
-        .story-content p:first-of-type::first-letter {
-            float: left; font-size: 4.5rem; line-height: 0.75; padding-right: 15px; color: var(--gold); font-family: var(--font-display);
-        }
-        .story-content p { margin-bottom: 1.5rem; }
-        .fade-overlay {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 200px;
-            background: linear-gradient(to top, #111, transparent); pointer-events: none; transition: 0.5s;
-        }
-        .story-content.expanded .fade-overlay { opacity: 0; }
-        .btn-read {
-            margin-top: 30px; border: none; color: var(--gold); font-family: var(--font-ui); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; background: transparent; cursor: pointer; transition: 0.3s; border-bottom: 1px solid transparent;
-        }
-        .btn-read:hover { border-bottom-color: var(--gold); color: #fff; }
+        .social-item:hover { border-color: var(--gold); color: var(--gold); transform: scale(1.1); box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
 
-        /* --- Journal --- */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; perspective: 1000px; }
-        .article-card {
-            padding: 40px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.02); transition: transform 0.1s ease, background 0.3s;
-            transform-style: preserve-3d;
-        }
-        .article-card:hover { background: rgba(255,255,255,0.04); border-color: var(--gold-dim); }
-        .article-date { font-family: var(--font-ui); font-size: 0.7rem; color: var(--gold); margin-bottom: 15px; display: block; transform: translateZ(20px); }
-        .article-title { font-size: 1.5rem; margin-bottom: 20px; color: #fff; line-height: 1.3; transform: translateZ(30px); }
-        
-        .news-item { padding: 25px 0; border-bottom: 1px solid var(--glass-border); display: flex; align-items: baseline; gap: 20px; }
-        .news-date { font-weight: 600; color: var(--gold); font-family: var(--font-ui); font-size: 0.9rem; min-width: 120px; }
+        footer { text-align: center; padding: 40px; font-family: var(--font-ui); font-size: 0.7rem; color: #444; letter-spacing: 2px; border-top: 1px solid #111; }
 
-        /* --- Contact --- */
-        .socials { display: flex; justify-content: center; gap: 30px; margin-top: 50px; }
-        .social-link { 
-            width: 60px; height: 60px; border: 1px solid var(--glass-border); border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; color: #888; transition: 0.4s; font-size: 1.2rem;
-        }
-        .social-link:hover { border-color: var(--gold); color: var(--gold); transform: scale(1.1) rotate(360deg); }
+        /* Animations */
+        @keyframes textReveal { to { transform: translateY(0); } }
+        @keyframes lineGrow { to { width: 100px; } }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        @keyframes glitch-anim { 0% { clip: rect(44px, 9999px, 56px, 0); } 20% { clip: rect(12px, 9999px, 88px, 0); } 40% { clip: rect(68px, 9999px, 8px, 0); } 60% { clip: rect(22px, 9999px, 76px, 0); } 80% { clip: rect(94px, 9999px, 14px, 0); } 100% { clip: rect(10px, 9999px, 30px, 0); } }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        footer { padding: 50px; text-align: center; font-size: 0.75rem; color: #555; border-top: 1px solid #151515; font-family: var(--font-ui); letter-spacing: 2px; }
+        .reveal-element { opacity: 0; transform: translateY(50px); transition: 0.8s var(--ease-out); }
+        .reveal-element.active { opacity: 1; transform: translateY(0); }
 
-        /* Utils */
-        .reveal { opacity: 0; transform: translateY(40px); transition: 0.8s cubic-bezier(0.215, 0.610, 0.355, 1); }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
-
+        /* Mobile */
         @media (max-width: 768px) {
             .hero h1 { font-size: 3rem; }
-            .about-grid, .grid-2, .poetry-grid { grid-template-columns: 1fr; }
-            .story-padding { padding: 40px 20px; }
+            .about-wrapper, .poetry-grid, .grid-2 { grid-template-columns: 1fr; }
+            .quote-card { min-width: 90vw; }
+            .cursor-outer, .cursor-inner { display: none; }
             nav { display: none; }
-            section { padding: 80px 20px; }
+            .stats-section { flex-direction: column; gap: 30px; }
         }
     </style>
 </head>
 <body>
 
+    <canvas id="canvas-bg"></canvas>
+    <div class="grain"></div>
+
     <div id="preloader">
-        <div class="loader-text">K. MAZURAK</div>
+        <div class="preloader-text"><span>КОСТЯНТИН МАЗУРАК</span></div>
+        <div class="preloader-line"></div>
     </div>
 
-    <header id="main-header">
-        <div class="logo">K. MAZURAK</div>
+    <div class="cursor-outer"></div>
+    <div class="cursor-inner"></div>
+
+    <header id="header">
+        <div class="logo">КОСТЯНТИН <span>МАЗУРАК</span></div>
         <nav>
             <ul>
-                <li><a href="#about">Автор</a></li>
-                <li><a href="#poetry">Поезія</a></li>
-                <li><a href="#prose">Проза</a></li>
-                <li><a href="#quotes">Думки</a></li>
-                <li><a href="#journal">Журнал</a></li>
-                <li><a href="#contact">Контакти</a></li>
+                <li><a href="#about" class="nav-link">Про автора</a></li>
+                <li><a href="#stats" class="nav-link">Інфо</a></li>
+                <li><a href="#poetry" class="nav-link">Поезія</a></li>
+                <li><a href="#prose" class="nav-link">Проза</a></li>
+                <li><a href="#quotes" class="nav-link">Думки</a></li>
+                <li><a href="#contact" class="nav-link">Контакти</a></li>
             </ul>
         </nav>
     </header>
 
     <section class="hero">
-        <div class="hero-bg" id="heroBg"></div>
-        <h1>Костянтин<br>Мазурак</h1>
-        <p>Поезія. Проза. Історична пам'ять.</p>
-        <button onclick="document.getElementById('poetry').scrollIntoView()" class="btn">Читати твори</button>
+        <div class="hero-bg"></div>
+        <div class="hero-title-wrapper">
+            <h1 class="glitch-wrapper" data-text="КОСТЯНТИН МАЗУРАК">КОСТЯНТИН<br>МАЗУРАК</h1>
+        </div>
+        <p class="hero-subtitle">
+            <span id="hero-typewriter"></span><span class="typing-cursor"></span>
+        </p>
+        <div class="scroll-down">
+            <span class="scroll-text">SCROLL</span>
+            <div class="scroll-line"></div>
+        </div>
     </section>
 
-    <section id="about">
-        <div class="section-header reveal">
-            <h2>Про автора</h2>
-            <div class="line"></div>
+    <div class="marquee-container">
+        <div class="marquee-content">
+            <span class="marquee-item">ПОЕЗІЯ • ПРОЗА • ІСТОРІЯ • НАЦІЯ • ПАМ'ЯТЬ • СЛОВО • </span>
+            <span class="marquee-item">ПОЕЗІЯ • ПРОЗА • ІСТОРІЯ • НАЦІЯ • ПАМ'ЯТЬ • СЛОВО • </span>
         </div>
-        <div class="about-grid">
-            <div class="about-img-wrapper reveal">
+    </div>
+
+    <div id="stats" class="stats-section">
+        <div class="stat-item reveal-element">
+            <span class="stat-number" data-target="2020">0</span>
+            <span class="stat-label">Рік початку</span>
+        </div>
+        <div class="stat-item reveal-element">
+            <span class="stat-number" data-target="150">0+</span>
+            <span class="stat-label">Написаних віршів</span>
+        </div>
+        <div class="stat-item reveal-element">
+            <span class="stat-number" data-target="100">0%</span>
+            <span class="stat-label">Українського</span>
+        </div>
+    </div>
+
+    <section id="about">
+        <div class="section-header reveal-element">
+            <span class="section-subtitle">Biography</span>
+            <h2 class="section-title">Про Автора</h2>
+            <div class="title-line"></div>
+        </div>
+        <div class="about-wrapper">
+            <div class="about-img-box reveal-element">
                 <div class="about-img"></div>
+                <div class="about-overlay"></div>
             </div>
-            <div class="about-text reveal">
-                <h3>Слово — це зброя і пам'ять.</h3>
-                <p>Мене звати Костянтин Мазурак. Я поет та прозаїк, який створює твори, що досліджують людські емоції, історичну пам’ять і внутрішні конфлікти. Писати почав у підлітковому віці, і відтоді слова стали для мене не просто інструментом, а способом розмовляти зі світом.</p>
-                <p>Моя поезія поєднує глибокі образи та емоційну експресію: від воєнної та філософської лірики до особистих переживань і соціальних тем. Крім віршів, я створюю оповідання та невеликі прозові форми, експериментую з жанрами і стилями, прагнучи передати у тексті живу енергію думки та почуття.</p>
+            <div class="about-text reveal-element">
+                <p>Мене звати Костянтин Мазурак. Я поет та прозаїк, який створює твори, що досліджують людські емоції, історичну пам’ять і внутрішні конфлікти.</p>
+                <p>Писати почав у підлітковому віці, і відтоді слова стали для мене не просто інструментом, а способом розмовляти зі світом. Моя поезія поєднує глибокі образи та емоційну експресію: від воєнної та філософської лірики до особистих переживань і соціальних тем.</p>
                 <p>Я цікавлюся історією, мистецтвом та сучасною культурою, що часто надихає мої твори. Для мене важливо, щоб читач не просто читав, а відчував і переживав кожне слово.</p>
             </div>
         </div>
     </section>
 
-    <div class="separator sep-1">
-        <h2>Поезія Душі</h2>
+    <div class="separator">
+        <div class="separator-bg sep-bg-1" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'); position:absolute; width:100%; height:120%; top:0; z-index:-1; background-attachment: fixed; background-size:cover; filter: brightness(0.5);"></div>
+        <h2 class="reveal-element" data-type-title="Поезія Душі"></h2>
     </div>
 
     <section id="poetry">
         <div class="poetry-grid">
-            <div class="poem-card reveal tilt-card">
-                <h3>Чорні крила кохання</h3>
-                <div class="poem-content">Чорні крила кохання накривають мене.
+            <div class="poem-card tilt-card reveal-element">
+                <h3 class="poem-title">Чорні крила кохання</h3>
+                <div class="poem-body">Чорні крила кохання накривають мене.
 Я знову не спав, чекаю тебе.
 Ця ностальгія накриває мене.
 Я втратив свою свідомість,
 я втратив себе.
-[cite_start][cite: 197-202]
 
 Я — неначе в кайданах бажань.
 Твій поцілунок — найбільша молитва моїх прохань.
@@ -346,9 +407,9 @@
 бо твоє кохання — моє воскресіння.</div>
             </div>
 
-            <div class="poem-card reveal tilt-card">
-                <h3>Судний день</h3>
-                <div class="poem-content">Судний день минув — та не настав,
+            <div class="poem-card tilt-card reveal-element">
+                <h3 class="poem-title">Судний день</h3>
+                <div class="poem-body">Судний день минув — та не настав,
 Небо горіло, і світ у полумʼї спав
 Я писати хотів, та слова потонули в тумані,
 Обстріли глухі розривали кляту  тишу в океані
@@ -388,9 +449,9 @@
 рідну кохану свою</div>
             </div>
 
-            <div class="poem-card reveal tilt-card">
-                <h3>Чорні думи</h3>
-                <div class="poem-content">Чорні думи полонили мене,
+            <div class="poem-card tilt-card reveal-element">
+                <h3 class="poem-title">Чорні думи</h3>
+                <div class="poem-body">Чорні думи полонили мене,
 Душа від тіла тікає, вбиває себе.
 Мій погляд мліє у тиші днів,
 Де нікого нема, де ніхто не жалів.
@@ -426,9 +487,9 @@
 Як покохати іншу, коли ти — моя?</div>
             </div>
 
-            <div class="poem-card reveal tilt-card">
-                <h3>Нас ріже кат чи брат</h3>
-                <div class="poem-content">Білі ночі , темна смута
+            <div class="poem-card tilt-card reveal-element">
+                <h3 class="poem-title">Нас ріже кат чи брат</h3>
+                <div class="poem-body">Білі ночі , темна смута
 В кайданах увесь прикутий
 Все страждаю , все блукаю
 Грішну душу тіло одіймає
@@ -462,9 +523,9 @@
 Доріже нас сама…</div>
             </div>
 
-            <div class="poem-card reveal tilt-card">
-                <h3>З неба лився кривавий дощ</h3>
-                <div class="poem-content">З неба лився кривавий дощ, —
+            <div class="poem-card tilt-card reveal-element">
+                <h3 class="poem-title">З неба лився кривавий дощ</h3>
+                <div class="poem-body">З неба лився кривавий дощ, —
 мов за вину — прощéння,
 немов сльози грішного вогню
 в очах його — преображéння.
@@ -490,9 +551,9 @@
 бо в кожнім болі — рух.</div>
             </div>
 
-            <div class="poem-card reveal tilt-card">
-                <h3>Серце огортала смута</h3>
-                <div class="poem-content">Серце огортала смута,
+            <div class="poem-card tilt-card reveal-element">
+                <h3 class="poem-title">Серце огортала смута</h3>
+                <div class="poem-body">Серце огортала смута,
 До тебе я немов прикутий.
 Без тебе я страждаю, неначе помираю,
 Тіло кровʼю все стікає,
@@ -529,9 +590,9 @@
 Будь моєю дружиною й супутницею ти — назавжди.</div>
             </div>
 
-            <div class="poem-card reveal tilt-card">
-                <h3>Чорний кровавий туман</h3>
-                <div class="poem-content">Чорний кровавий туман
+            <div class="poem-card tilt-card reveal-element">
+                <h3 class="poem-title">Чорний кровавий туман</h3>
+                <div class="poem-body">Чорний кровавий туман
 Хлопець що створений із ран
 Стікав кровʼю поволі
 На обличчі виступала смута, німа і закута.
@@ -552,9 +613,9 @@
 З нею стік кров’ю, з нею й ожив.”</div>
             </div>
             
-            <div class="poem-card reveal tilt-card">
-                <h3>Блідний погляд і туга</h3>
-                <div class="poem-content">Блідний погляд і туга
+            <div class="poem-card tilt-card reveal-element">
+                <h3 class="poem-title">Блідний погляд і туга</h3>
+                <div class="poem-body">Блідний погляд і туга
 Утрачений без неї сенс життя
 Молитво моя , дім мого буття
 Чом зажмурені мої блакитні оченята ?
@@ -596,9 +657,9 @@
 Просто смертельно кохай…</div>
             </div>
             
-            <div class="poem-card reveal tilt-card">
-                <h3>Місяць й зорі у душі</h3>
-                <div class="poem-content">Місяць й зорі у душі
+            <div class="poem-card tilt-card reveal-element">
+                <h3 class="poem-title">Місяць й зорі у душі</h3>
+                <div class="poem-body">Місяць й зорі у душі
 Чом мої румʼяні щічки у тузі
 Чом та посмішка не сяє
 Дівчинонька не забула як її кохаю
@@ -625,9 +686,9 @@
 А я все не забуваю ці блакитні очки</div>
             </div>
             
-            <div class="poem-card reveal tilt-card">
-                <h3>Світло гасне</h3>
-                <div class="poem-content">Світло гасне — я тримаюсь!
+            <div class="poem-card tilt-card reveal-element">
+                <h3 class="poem-title">Світло гасне</h3>
+                <div class="poem-body">Світло гасне — я тримаюсь!
 Помираю, побиваюсь!
 Душу, тіло рве до бою —
 поливають зрадники нас кровʼю!
@@ -684,245 +745,360 @@
         </div>
     </section>
 
-    <div class="separator sep-2">
-        <h2>Проза Життя</h2>
+    <div class="separator">
+        <div class="separator-bg" style="background-image: url('https://images.unsplash.com/photo-1461360228754-6e81c478b882?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'); position:absolute; width:100%; height:120%; top:0; z-index:-1; background-attachment: fixed; background-size:cover; filter: brightness(0.5);"></div>
+        <h2 class="reveal-element" data-type-title="Проза Життя"></h2>
     </div>
 
     <section id="prose">
+        <div class="section-header reveal-element">
+            <span class="section-subtitle">Stories</span>
+            <h2 class="section-title">Історична Проза</h2>
+            <div class="title-line"></div>
+        </div>
         <div class="prose-wrapper">
-            <div class="story-block reveal">
-                <div class="story-padding">
-                    <h3>Хмельницька душа</h3>
-                    <span class="story-meta">Історичне оповідання &bull; 5 хв читання</span>
-                    <div class="story-content" id="story1">
-                        <p>Степ — що покрився мовчанням, темним, похилим закріпаченням, підкоренням селян. Час золотого десятиліття для ляхів та час десятків років поновлення, страждань півдня руського народу, що звуться українцями, нацією незламного огню, нацією бестії без голови…</p>
-                        <p>Надворі був квітучий смертями та надії 1648 рік. Відбувався збір Ради в Корсуні, на святій землі. Той час десятиліття без повстань вимагав сильно лідера — вимагав того, хто може без меча, тільки булавою, об’єднати всіх тих козаків, втікачів, повсталих селян, шляхтичів; всіх, хто бачив козаччину побудовою держави, всіх, хто жадав волі, власної мови, країни, власного вишневого садочку, бодай маленький кувалок землі. Але без польського чоботу та гніту…</p>
-                        <p>І радники в паніці гублять свої думи серед бурого вітру. Аж раптом, наче сокіл серед степу, виринає корінь із землі, являється перед ними світличний, являється мужній Хмель, що зветься Богдан. Він починає свою річ — то глеготіння, від якого кожен замовк та слухав його сильну, магічну та водночас темну думу… Він наче оратор, наче поцілований Богом лідер народу… І всі одностайно вибирають його як гетьмана, державця булави, справжнього державника, сонцем, що проступає над поневоленням народу та доби столітнього бездержав’я.</p>
-                        <p>І починає він військо збирати на ту війну визвольну… Збирає з Києва, з Корсуні, з Житомира, з Січі кінноту і збирає люту силу, силу полум’я освяченого хрестом… Починають вони мчати у той бій, вступають на свою святу землю. Вступає й Хмельницький у Жовту Воду і промовляє:<br>— Бийся єдиний, бийся до ночі, хай смерть твоя забирає ночі, і у пітьму одне шепочу: забери мене, збережи співочу, хай живе Русь козачинна, та хай глегоче.</p>
-                        <p>І б’ються мужно, тужно всі вони; помирають, відступають кляті ті ляхи. Панів сі грають маленькі дітлахи. Це Козачина прийшла, погромила майже всіх вона; покривається кров’ю Жовта Вода, спливають поволі тіла… Тікають ляхи, відступають, бояться; до короля кричать, біжать так, що світу не бачать, ледь на ногах стоять… І каже Хмельницький: «За ним, гойда, брати мої; за ними, гойда, до кінця…»</p>
-                        <p>Рушили і далі за ним всі брати. Брати що звуться славні козаки. І от уже під Корсунем вони, запеклі хоробрістю полки. Починається бій той другий бій, що зветься славним -корсунським, б’ються мужно як русини б’ються у степах і на долині, у траві й малині б’ються всі вони.</p>
-                        <p>Минають дні і ночі, моляться дівчата й виплакали уже всі очі, чекають все на звістку всі пророчу, перемоги ждуть усі… І почули всі віру і молитву їхню і постали до мечів до булави наші вольні козаки. В їх очах горів неначе вогонь, вогонь збуту, слави, призначення в житті, сенс життя – повстання, сенс буття як держава вільна що зветься Запоріжжя.</p>
-                        <p>Розгромили польське військо все вони і почули тую славу інші козаки, приєдналися до них вони. Звольнили лівий берег той Дніпра, Лівобережжя – тепер на правий їм пора. Гетьман каже: «Славтеся лівобережні брати ви мої пишіть пісні жінки, вступайте до лав наших славні нові козаки …» І відправились вони через степи, ріку та й в ліси … Чекайте нас невольники мої – каже Хмельницький.</p>
-                        <p>І йде поволі сила-селена козаків, селян, нації драконів і огнів. Крізь побережжя ждуть на славу ту прийдешню. Матері пісні складають, козаки йдуть співають. І доходять до Пилявець там де ріки всі пливуть, там де українці всі спустошені панами їх ждуть. І відбувається третя вже тая битва, битва не на біль а смерть. Ляхів сила-селена збігається в один момент і б’ються ляхи до кінця і під зорями під місцем б’ється шляхта та уся, б’ються мужно й козаки за землі свої всі вони -розривають кляті полки, рубають ляхів пополам, поляки мов кошмарі тікають…</p>
-                        <p>Бо думають що назавжди поневолять що житиме народ в оманах, служитимуть їх козаки селяни і платитимуть даннину – Та всі вони нащадки Святослава. Зветься він хоробрий, сильний впертий руський князь. Він хозарів тих громив і візантійців, болгар усіх побив бо слава його – білий той налив… І б’ються далі козаки – ляхів пару тисяч перемога вже кричать вони. Бере Хмельницький слово промовляє – «до кінця не осоромимо землі руської, уб’ємо цього польського гонця». Б’ються мужно до кінця – перемагають, та врешті прославляють - Хмеля свого то отця.</p>
-                        <p>Єднається тепер і правий берег Єднається уся земля свята – руська духом, козацька силою вона … Після грізних боїв під Пилявцями степ заспокоївся, але не повністю — ще дихав кров’ю і гнівом. Народ Русі, з очима, палаючими від боротьби, піднявся над ріками й лісами.</p>
-                        <p>І тоді прийшов мир… Зборівський мир — не ласка короля, а результат сили шаблі й волі. Київ, Чернігів, Брацлав — землі, де козацький гнів і честь народили нову державу. Столиця Чигирин — колиска козачини майбутня та. Слався знову козацько-руська земля… І козаки, і селяни, і всі, хто прагнув волі, змогли вперше відчути: Русь піднімається знову, навіть якщо навколо ще йде тінь війни. Навіть якщо навколо катують, палають ще ліси; та буде ще війна, не приймуть ляхи ті поразки — будуть війни ще з огню, не з ласки. То ж готуємось ми, браття, і до перемоги, й до поразки…</p>
-                        <p>У реєстр також записали 40 тисяч — козакам автономію ту дали. Та зрозуміло, що не назавжди, бо і польські, і козацькі душі ще боєм палали… Після Зборова, надії миру, летіли степом чорнії ворони, мов казали: “Буде лихо, буде лихо й не одне, немов зазнає поразки скоро військо це славне”. І не знали ще тоді, що Коль готує змову, війська гуртує, чекає на ту облогу… Хмельницький стояв над полем миру, немов темне сонце серед ясного дня, і бачив: спокій — це обман, а меч ще довго не зможе лягти у ножни. Ще буде не одна битва за политі кров’ю ці степи…</p>
-                        <p>І зійшло криваве сонце над Дніпром, і зрозуміли всі: не буде миру — буде битва і погром. Тому війська збиралися знову: кіннота з Січі, піші загони з Поділля, Лівобережжя, Києва. Тисячі військ, що ждали битву, бо дай втримати одне воєводство, співати руською молитву. Ляхів так багато, та може виграєм духом ми цю битву — шлемо всі, козаки, тобі, печалі й радості молитву… Не жди, дівчино, мене з бою, бо ляжу я у степ, зальюся кров’ю; народиться Україна вільна, народиться незалежність — тому я помру у цьому степу, щоб було нове покоління, щоб рід продовжився незламний, козацький, руський — народ цей без голови, національний…</p>
-                        <p>І крик лунав, сипалась і тріскала земля, сунула поволі та гроза. І дістав козак меча — почалася битва Берестецька, кровна нація моя… Битва, де не було жалю, битва у лісі й у степу. Страшна кров покрила степ — падали на землю й ті, і ті. Та важко було дуже нашим побратимам — билися тежко-тежко, билися довго-довго і під місяцем, і під зорями, і під дощем тим, і грозою… Билися так мужно, як ніколи… Тежка була битва — лягло багато козаків та поляків втроє. Заступило чорне сонце; бій зрадили татари — народ наш весь усій. Заплатив король їм купу срібняків; татари кляті повтікали до панів. Битву ту програли, але не до кінця — Київське воєводство ще зостали, ляхів ще довго-довго проклинали…</p>
-                        <p>Підписали знову мирний договір — Білоцерківський. Смутний він усій, бо одне лиш воєводство і реєстр удвічі менше; та не було порому у козаків, бо готували нову битву — відвоювати землю, треба прочитати там молитву… Військо збиралося знову: із тих, що вижили, із нових козаків, із селян і всіх, хто прагнув волі. І степ розкрив їм дорогу на Батіг — місце, де настав реванш, пролиття святої крові. Там кожен крок був відлунням Берестечка, кожна шабля — крик крові братів, що загинули, і водночас — обіцянка помсти підростаючих синів…</p>
-                        <p>І кинулися вони у бій — кинулися різати шаблею клятих ляхів. Почав король боятись, почав війська великі збирати — та розлюченого козака так просто не здолати… Годинами, днями точилася битва; проходило все крізь призму помсти, призму страждань поневолених. Тіло наповнювалося кров’ю, та клятий козацький дух рвав, рвав усіх до бою, до слави. І не чекали козаки, як тепер європейців ми поради — билися славно й до кінця. Крові було стільки, що стікало навіть у притоки й до самого Донця.</p>
-                        <p>Для ляхів стала битва ця багнетом, поразкою сорок восьмого року, немов силуетом… Не розуміли, що націю, яка має національну свідомість і вогонь воювати, неможливо здолати, бо вона буде хоч сотні років поневолена, та буде повставати, меч гордо, мов Святослав на Хортиці, тримати; бо не боїться вона ні вмерти, ні тіло віддати, — душа їх буде в інших жити, іншим правду й сутність глеготати…</p>
-                        <p>І вернулися землі в рідну гавань; вернулися воєводства Брацлавське і Чернігівське, вернулися славні і були території наші, як після Зборова… Підписано було той договір, що зветься Переяславський, та не хотіли козаки миритись — хотіли покращити позиції і далі битися; тягнув дух народу, дух Русі тих поколінь… І зібрали знову коней, козаків, селян, лютую силу і примчали разом до Жванця. Не соромно було нікому там загинуть… Підняли ті мечі, гармати, завойовані нові, підняли дух той і заступили всі, і взяли в коло грішний той Жванець…</p>
-                        <p>І почали наступати, та кляті ляхи так просто не давались — вони вже смерті не боялись, бились-бились до кінця… Сильна й продумана фортеця та Жванця, довго-довго тривала та облога; зрадили татари знову… Відступали козаки, відступали руські ті сини, та поразки цієї не прийняли вони. Тяжке було становище; тоді Хмельницький думав і шукав союзника нового, все собі. І сказав, що цар той може помогти, і поїхав в раду Переяслав наш Богдан. Знав, що треба було іншого союзника шукати, та не було вже куди діватись.</p>
-                        <p>Говорили думи, терли і таки домовилися, але тільки усно. Потім зібралися знову і підписали все письмово. Задурманений москаль поводився дуже зверхньо, гонорово — не розумів, хто такі козаки, хотів їх надурити, організувати змову… Готував той цар все з Польщею промову, довго він не думав; пройшло два роки, і придумав, знову без поради чиїсь підписав. Договір цей Віленським назвав. Хмельницький зрадник? Все то він кричав… Розчарувався наш Богдан, хоч і все прекрасно він до того знав, та не було більше вибору; у нього тепер прийшов він до короля… Швеція дружня, вся така…</p>
-                        <p>Почали знову думу терти, говорити. Ось що розказували очевидці: — Ти є гетьман правого і лівого берега Дніпра, — каже той король.— І Черленої Руси, — відповідає Хмельницький.— Ні, то є війна з поляками; я не хочу з ними воювати, — каже король.— Межі моєї держави — це межі моєї мови, — каже Хмельницький. Подивився той король, потиснув йому руку і зрозумів, що сила їхня двох — договору запорука…</p>
-                        <p>То тепер для нас фантастика така — подивімося, в який час жили всі вони: бездержав’я, війни, поневолення. То вони тоді культуру, мову, традиції міцно тримали, всюди мову нашу прославляли. А ми тепер жаліємося на війну, не шануємо ні мову, ні культуру, історії не знаємо, російською говоримо — Хмельницького зрадником називаємо. Далі час не довго той тягнувся; за рік Хмельницький помер. Кажуть: може отруїли, може захворів, може і убили… Та неважливо вже, бо настала темна смута, темна та руїна. Поділилася за пару років наша та країна на лівий і на правий — і не було вже тої слави…</p>
-                        <div class="fade-overlay"></div>
-                    </div>
-                    <button class="btn-read" onclick="toggleStory('story1', this)">Читати повністю</button>
+            
+            <div class="prose-item reveal-element">
+                <span class="prose-meta">Історичний нарис</span>
+                <h3 class="prose-title">Хмельницька душа</h3>
+                <div class="prose-content" id="prose1">
+                    <p>Степ — що покрився мовчанням, темним, похилим закріпаченням, підкоренням селян. Час золотого десятиліття для ляхів та час десятків років поновлення, страждань півдня руського народу, що звуться українцями, нацією незламного огню, нацією бестії без голови…</p>
+                    <p>Надворі був квітучий смертями та надії 1648 рік. Відбувався збір Ради в Корсуні, на святій землі. Той час десятиліття без повстань вимагав сильно лідера — вимагав того, хто може без меча, тільки булавою, об’єднати всіх тих козаків, втікачів, повсталих селян, шляхтичів; всіх, хто бачив козаччину побудовою держави, всіх, хто жадав волі, власної мови, країни, власного вишневого садочку, бодай маленький кувалок землі. Але без польського чоботу та гніту…</p>
+                    <p>І радники в паніці гублять свої думи серед бурого вітру. Аж раптом, наче сокіл серед степу, виринає корінь із землі, являється перед ними світличний, являється мужній Хмель, що зветься Богдан. Він починає свою річ — то глеготіння, від якого кожен замовк та слухав його сильну, магічну та водночас темну думу… Він наче оратор, наче поцілований Богом лідер народу… І всі одностайно вибирають його як гетьмана, державця булави, справжнього державника, сонцем, що проступає над поневоленням народу та доби столітнього бездержав’я.</p>
+                    <p>І починає він військо збирати на ту війну визвольну… Збирає з Києва, з Корсуні, з Житомира, з Січі кінноту і збирає люту силу, силу полум’я освяченого хрестом… Починають вони мчати у той бій, вступають на свою святу землю. Вступає й Хмельницький у Жовту Воду і промовляє:<br>— Бийся єдиний, бийся до ночі, хай смерть твоя забирає ночі, і у пітьму одне шепочу: забери мене, збережи співочу, хай живе Русь козачинна, та хай глегоче.</p>
+                    <p>І б’ються мужно, тужно всі вони; помирають, відступають кляті ті ляхи. Панів сі грають маленькі дітлахи. Це Козачина прийшла, погромила майже всіх вона; покривається кров’ю Жовта Вода, спливають поволі тіла… Тікають ляхи, відступають, бояться; до короля кричать, біжать так, що світу не бачать, ледь на ногах стоять… І каже Хмельницький: «За ним, гойда, брати мої; за ними, гойда, до кінця…»</p>
+                    <p>Рушили і далі за ним всі брати. Брати що звуться славні козаки. І от уже під Корсунем вони, запеклі хоробрістю полки. Починається бій той другий бій, що зветься славним -корсунським, б’ються мужно як русини б’ються у степах і на долині, у траві й малині б’ються всі вони.</p>
+                    <p>Минають дні і ночі, моляться дівчата й виплакали уже всі очі, чекають все на звістку всі пророчу, перемоги ждуть усі… І почули всі віру і молитву їхню і постали до мечів до булави наші вольні козаки. В їх очах горів неначе вогонь, вогонь збуту, слави, призначення в житті, сенс життя – повстання, сенс буття як держава вільна що зветься Запоріжжя.</p>
+                    <p>Розгромили польське військо все вони і почули тую славу інші козаки, приєдналися до них вони. Звольнили лівий берег той Дніпра, Лівобережжя – тепер на правий їм пора. Гетьман каже: «Славтеся лівобережні брати ви мої пишіть пісні жінки, вступайте до лав наших славні нові козаки …» І відправились вони через степи, ріку та й в ліси … Чекайте нас невольники мої – каже Хмельницький.</p>
+                    <p>І йде поволі сила-селена козаків, селян, нації драконів і огнів. Крізь побережжя ждуть на славу ту прийдешню. Матері пісні складають, козаки йдуть співають. І доходять до Пилявець там де ріки всі пливуть, там де українці всі спустошені панами їх ждуть. І відбувається третя вже тая битва, битва не на біль а смерть. Ляхів сила-селена збігається в один момент і б’ються ляхи до кінця і під зорями під місцем б’ється шляхта та уся, б’ються мужно й козаки за землі свої всі вони -розривають кляті полки, рубають ляхів пополам, поляки мов кошмарі тікають…</p>
+                    <p>Бо думають що назавжди поневолять що житиме народ в оманах, служитимуть їх козаки селяни і платитимуть даннину – Та всі вони нащадки Святослава. Зветься він хоробрий, сильний впертий руський князь. Він хозарів тих громив і візантійців, болгар усіх побив бо слава його – білий той налив… І б’ються далі козаки – ляхів пару тисяч перемога вже кричать вони. Бере Хмельницький слово промовляє – «до кінця не осоромимо землі руської, уб’ємо цього польського гонця». Б’ються мужно до кінця – перемагають, та врешті прославляють - Хмеля свого то отця.</p>
+                    <p>Єднається тепер і правий берег Єднається уся земля свята – руська духом, козацька силою вона … Після грізних боїв під Пилявцями степ заспокоївся, але не повністю — ще дихав кров’ю і гнівом. Народ Русі, з очима, палаючими від боротьби, піднявся над ріками й лісами.</p>
+                    <p>І тоді прийшов мир… Зборівський мир — не ласка короля, а результат сили шаблі й волі. Київ, Чернігів, Брацлав — землі, де козацький гнів і честь народили нову державу. Столиця Чигирин — колиска козачини майбутня та. Слався знову козацько-руська земля… І козаки, і селяни, і всі, хто прагнув волі, змогли вперше відчути: Русь піднімається знову, навіть якщо навколо ще йде тінь війни. Навіть якщо навколо катують, палають ще ліси; та буде ще війна, не приймуть ляхи ті поразки — будуть війни ще з огню, не з ласки. То ж готуємось ми, браття, і до перемоги, й до поразки…</p>
+                    <p>У реєстр також записали 40 тисяч — козакам автономію ту дали. Та зрозуміло, що не назавжди, бо і польські, і козацькі душі ще боєм палали… Після Зборова, надії миру, летіли степом чорнії ворони, мов казали: “Буде лихо, буде лихо й не одне, немов зазнає поразки скоро військо це славне”. І не знали ще тоді, що Коль готує змову, війська гуртує, чекає на ту облогу… Хмельницький стояв над полем миру, немов темне сонце серед ясного дня, і бачив: спокій — це обман, а меч ще довго не зможе лягти у ножни. Ще буде не одна битва за политі кров’ю ці степи…</p>
+                    <p>І зійшло криваве сонце над Дніпром, і зрозуміли всі: не буде миру — буде битва і погром. Тому війська збиралися знову: кіннота з Січі, піші загони з Поділля, Лівобережжя, Києва. Тисячі військ, що ждали битву, бо дай втримати одне воєводство, співати руською молитву. Ляхів так багато, та може виграєм духом ми цю битву — шлемо всі, козаки, тобі, печалі й радості молитву… Не жди, дівчино, мене з бою, бо ляжу я у степ, зальюся кров’ю; народиться Україна вільна, народиться незалежність — тому я помру у цьому степу, щоб було нове покоління, щоб рід продовжився незламний, козацький, руський — народ цей без голови, національний…</p>
+                    <p>І крик лунав, сипалась і тріскала земля, сунула поволі та гроза. І дістав козак меча — почалася битва Берестецька, кровна нація моя… Битва, де не було жалю, битва у лісі й у степу. Страшна кров покрила степ — падали на землю й ті, і ті. Та важко було дуже нашим побратимам — билися тежко-тежко, билися довго-довго і під місяцем, і під зорями, і під дощем тим, і грозою… Билися так мужно, як ніколи… Тежка була битва — лягло багато козаків та поляків втроє. Заступило чорне сонце; бій зрадили татари — народ наш весь усій. Заплатив король їм купу срібняків; татари кляті повтікали до панів. Битву ту програли, але не до кінця — Київське воєводство ще зостали, ляхів ще довго-довго проклинали…</p>
+                    <p>Підписали знову мирний договір — Білоцерківський. Смутний він усій, бо одне лиш воєводство і реєстр удвічі менше; та не було порому у козаків, бо готували нову битву — відвоювати землю, треба прочитати там молитву… Військо збиралося знову: із тих, що вижили, із нових козаків, із селян і всіх, хто прагнув волі. І степ розкрив їм дорогу на Батіг — місце, де настав реванш, пролиття святої крові. Там кожен крок був відлунням Берестечка, кожна шабля — крик крові братів, що загинули, і водночас — обіцянка помсти підростаючих синів…</p>
+                    <p>І кинулися вони у бій — кинулися різати шаблею клятих ляхів. Почав король боятись, почав війська великі збирати — та розлюченого козака так просто не здолати… Годинами, днями точилася битва; проходило все крізь призму помсти, призму страждань поневолених. Тіло наповнювалося кров’ю, та клятий козацький дух рвав, рвав усіх до бою, до слави. І не чекали козаки, як тепер європейців ми поради — билися славно й до кінця. Крові було стільки, що стікало навіть у притоки й до самого Донця.</p>
+                    <p>Для ляхів стала битва ця багнетом, поразкою сорок восьмого року, немов силуетом… Не розуміли, що націю, яка має національну свідомість і вогонь воювати, неможливо здолати, бо вона буде хоч сотні років поневолена, та буде повставати, меч гордо, мов Святослав на Хортиці, тримати; бо не боїться вона ні вмерти, ні тіло віддати, — душа їх буде в інших жити, іншим правду й сутність глеготати…</p>
+                    <p>І вернулися землі в рідну гавань; вернулися воєводства Брацлавське і Чернігівське, вернулися славні і були території наші, як після Зборова… Підписано було той договір, що зветься Переяславський, та не хотіли козаки миритись — хотіли покращити позиції і далі битися; тягнув дух народу, дух Русі тих поколінь… І зібрали знову коней, козаків, селян, лютую силу і примчали разом до Жванця. Не соромно було нікому там загинуть… Підняли ті мечі, гармати, завойовані нові, підняли дух той і заступили всі, і взяли в коло грішний той Жванець…</p>
+                    <p>І почали наступати, та кляті ляхи так просто не давались — вони вже смерті не боялись, бились-бились до кінця… Сильна й продумана фортеця та Жванця, довго-довго тривала та облога; зрадили татари знову… Відступали козаки, відступали руські ті сини, та поразки цієї не прийняли вони. Тяжке було становище; тоді Хмельницький думав і шукав союзника нового, все собі. І сказав, що цар той може помогти, і поїхав в раду Переяслав наш Богдан. Знав, що треба було іншого союзника шукати, та не було вже куди діватись.</p>
+                    <p>Говорили думи, терли і таки домовилися, але тільки усно. Потім зібралися знову і підписали все письмово. Задурманений москаль поводився дуже зверхньо, гонорово — не розумів, хто такі козаки, хотів їх надурити, організувати змову… Готував той цар все з Польщею промову, довго він не думав; пройшло два роки, і придумав, знову без поради чиїсь підписав. Договір цей Віленським назвав. Хмельницький зрадник? Все то він кричав… Розчарувався наш Богдан, хоч і все прекрасно він до того знав, та не було більше вибору; у нього тепер прийшов він до короля… Швеція дружня, вся така…</p>
+                    <p>Почали знову думу терти, говорити. Ось що розказували очевидці: — Ти є гетьман правого і лівого берега Дніпра, — каже той король.— І Черленої Руси, — відповідає Хмельницький.— Ні, то є війна з поляками; я не хочу з ними воювати, — каже король.— Межі моєї держави — це межі моєї мови, — каже Хмельницький. Подивився той король, потиснув йому руку і зрозумів, що сила їхня двох — договору запорука…</p>
+                    <p>То тепер для нас фантастика така — подивімося, в який час жили всі вони: бездержав’я, війни, поневолення. То вони тоді культуру, мову, традиції міцно тримали, всюди мову нашу прославляли. А ми тепер жаліємося на війну, не шануємо ні мову, ні культуру, історії не знаємо, російською говоримо — Хмельницького зрадником називаємо. Далі час не довго той тягнувся; за рік Хмельницький помер. Кажуть: може отруїли, може захворів, може і убили… Та неважливо вже, бо настала темна смута, темна та руїна. Поділилася за пару років наша та країна на лівий і на правий — і не було вже тої слави…</p>
+                    <div class="fade-mask"></div>
                 </div>
+                <button class="magnetic-btn" onclick="toggleProse('prose1', this)">Читати повністю</button>
             </div>
 
-            <div class="story-block reveal">
-                <div class="story-padding">
-                    <h3>Віра, мова, традиції</h3>
-                    <span class="story-meta">Оповідання про Хрещення Русі &bull; 7 хв читання</span>
-                    <div class="story-content" id="story2">
-                        <p>Тихий ранок, йде сильний пористий дощ, злива… Я пробуджуся. Розплющую очі, від крапель дощу, що повільно стікали моїм обличчям. Вдягаю свою довгу одежу. Прямую пішки до долини Поділля.</p>
-                        <p>Йдучи я не міг зрозуміти що це такий за запах, наче якось згореного огню, сажі. Аж раптом я згадав що вчора було свято Купайла. День літнього сонцестояння – найдовший день року. Свято сонця, води вогню та родючості… Купайло і Марена – світло й темінь минувшого дню… Дажбог, Ярило, Мокош мої славні боги, славте цю природу, цей врожай майбутній, заберіть русалок цих вельможних до себе у вирій, у вирій тепла…</p>
-                        <p>І тут я замислився - чому кожного разу коли я думаю про ідею основну сутність язичництва, душа починає палати? Я неначе несвідомо наділяюся якоїсь сонячною енергією Дажбога… Сенс мого життя, життя 17 річного парубка з Південної Русі це надмірне кохання, нелюдська залежність від своєї супутниці Марічки – квітки, її ім’я і дійсно так перекладається… Який же сильний наш люб…</p>
-                        <p>Другий сенс яким я наділяю своє буття це любов, люб до рідної землі її дари наші традиції наша мова південно-руська яка найкраще звучить з поміж інших нарічь. Йдучи до поділля я чую розмови прохожих, кажуть наче Володимир перестане вірити в Перуна, зрічеться його, я не міг збагнути, що саме вони мали на увазі, він не поважає одного з головних богів чи що, дивно якось…</p>
-                        <p>Я згадую у мить, що було вчора і як ми справляли той праздник, неначе по тілу пробігає годинник минулого вітру… Пам’ятаю як дівчата плели віночки з м’яти, полину, барвінку та інших трав. Вони збиралися всі разом і клали обережно віночки на воду, якщо він припливе до їх судженого то будуть жити вони довго і прекрасній любній грамонії… Насправді я обожнюю це свято, бо ми нажаль трохи далеко живемо один від одного з Марічкою, а тут цілий вечір разом вона у неймовірній вишитій сукні разом зі мною святкує це особливе свято… Знову хочу до неї…</p>
-                        <p>Так от сенс свята ще в тому що до нього не допускають самотніх чи вдовиць. Насправді я постійно сумую за нею тому вчорашній день так запам’ятався, а точно ми ще вчора перескочили таки через те вогнище, а це означає що Дажбог схвалив наш люб на все життя… Який же я радий…</p>
-                        <p>Я далі йду говорячи сам з собою, як я це постійно роблю, аж раптом випадково зустрічаю її, свою квітоньку і раптом мене наповнює знову це неземне почуття щастя... Але я не розумію що трапилося вона неначе засмучена чимось, я довго довго обіймаю її і запитую що сталося і чую ці трагічні для нас обох слова: — Володимир зрікся віри і хоче заборонити нашу віру, хоче нас охрестити.</p>
-                        <p>Я не міг повірити в ці слова я зранку чув щось схоже але не розумів контексту, я люблю свою землю я служу їй її природі її творінню моїй Марічці. Хіба я можу прийняти цю віру христа - вона не свідчить навіть про половину моєї любви і моєї сутности, заради чого це взагалі… Я втішаю своє кохання намагаючись не показувати своїх сліз. І тієї туги своєї закривавленої душі… Вона все ж таки знає мене не один вік тому помічає моє розчарування і каже мені я незнаю що це за віра, але я все одно залишуся вірною Дажбогу, я все одно буду вірити в Ладу богиню кохання і кохати тебе сильно сильно чуєш…</p>
-                        <p>Я цілую її раз за разом і теж кажу: Я теж не можу уявити своє життя без тебе. Я теж даю клятву всім богам і Ладі що кохатиму тебе назавжди… Плітки про це вже давно ходили по русі своїми глиняними ногами… Ще коли Володимир тільки познайомився з Анною, вона ж християнка та батько ж імператор не визнавав цього шлюбу та тепер коли Володимир взяв Корсунь, дійшла звістка що він там охрестився і пливе на Русь щоб всіх охрестити, та хто прийме тут цю віру, ми ж всі слов’яни ми всі маємо злитися язичницькому морі як один народ, південо-руський наш Київ наші поляни наші державотворці…</p>
-                        <p>Ми всі не просто поклонялися цим богам, а дійсно жили їхніми ідеями, думами цінностей тієї віри, і тут якесь християнство незрозуміле – це взагалі віра Візантії не наша… Таку думку як ми підтримували всі, ніхто навіть не розумів сутності віри Христа, що буде з нашими святами та традиціями… Я промовив: — Сонце ти моє, не звертай уваги, це напевно просто чутки…</p>
-                        <p>Вона на мить зраділа і міцно-міцно мене обійняла. Вже ставало темно, сонце заходило за небо, з’являвся місяць, повний цікаво а він завжди такий… Я провів її додому, ще довго ніяк не міг відпустити її руку, знову прощався з сльозами на очах. Засмутившись цим я пішов додому, дорогою додому просив Ладу щоб та пошвидше нас звела знову, я вірив що саме вона щоразу організовує нашу випадкову зустріч.</p>
-                        <p>Прийшовши додому, я знову пішов розпитувати в свого батька про наші віру та про наших богів, я кожного дня дізнався щось нове, або просто забув, згадував минуле. Незнаю взагалі я мало що пам’ятаю з дитинства, пам’ятаю лише один наратив який мені скзали коли я був маленьким хлопчиком: — будь собою і люби завжди свою землю…</p>
-                        <p>Тоді я не розумів цих слів так глибоко як через декілька років і зараз. Я завжди думав що тут мається на увазі про Батьківщину. Допоки до мене через деякий час не прийшов дивний лист. Ну як прийшов, мені приніс його брат і сказав що знайшов його на вулиці, але там писалося дивними наріччями. Я все не міг збагнути що то за говір такий. Неначе східне наріччя неначе наше. Там було декілька слів які я незнав, в ті часи часто писали мовою колишніх племен. Тому це не було дивно. Я прочитав тільки 2 сторінки того рукопису, сього їх було 2 по 20, це наче 40 не пам’ятаю вже.</p>
-                        <p>Мене настільки захопило читання, що я не помітив як за вікном почалася буря. Це було ще літо тому це мало би посіяти дивину в моїй голові. Та я з великим інтересом далі читав той рукопис, прочитавши я зациклив свою увагу на одній фразі. Я згадав що колись бачив її раніше на якісь архітектурній споруді чи то недалеко від кладовища. Десь там було написане щось схоже… Це було коли мені було 10 тоді я нічого не зрозумів прочитавши тих декілька слів і просто забув про це.</p>
-                        <p>Так от там писалося про те що найбільшою цінністю і безсмертною є для кожного його ідея і душа. І нижче було зображенно якісь карикатури житта, сонця, кордонів держави і писалися слова: традиції, мова, культура… Так от сенс в тому що культуру, мова і традиції це не віддільні речі людини які формують її як ідентичність як націю, наприклад я вважаю себе південним русином. А душу тобто твою ідею головну вбити не можливо. Наше тіло занадто слабке перед думкою і ідеєю. Тому людина помирає тільки фізично ідеї які вона творила не вмирають…</p>
-                        <p>Я закрив книгу і вклався спати, довго ще роздумуючи над цими словами. Наступного дня коли я прокинувся одразу вирушив на віче яке було заплановане на дев’яту вечора ще було довго до нього, але я мав зустрітися з своїм другом Іванком. Я йшов на поділ там жили всі і Марічка і мій друг Іванко. Один я жив в селищі що під Києвом, тому дорога була не маленька, близько три години пішки чи годину верхом на коні. Коня в мене не було тому постійно ходив пішки.</p>
-                        <p>Нарешті ми зустрілися з ним і проходячи біля Дніпра він чомусь почав молитися. Це було досить дивно та й я не розумів тих молитов. Вони були наче якоюсь видуманою мовою, що зветься церковно-слов’янська. Це була болгарська мова яку тоді використовували у більшості молитов і книг, в тому числі із Візантії. Звідти походило християнство яке хотіли насадити нам. Іван ніколи не був язичником так як він народився і прожив своє дитинство на Корсуні. Там він і познайомився з цією вірою, а в років 10 тому переїхав сюди.</p>
-                        <p>Він був старшим за мене на 3 дні, пам’ятаю як він постійно жартував про це… Насправді я спокійно ставився до того що він іншої віри адже він поважав мою віру і мої традиції. Ми разом ходили на різні свята Купайла, зелені свята і тд… Він святкував наші свята теж, полюбив наші традиції. Фактично він вірив у дві віри одночасно. Це не було дивно для таких як він, але всі хто жили на Русі вірили тільки у єдину віру - язичництво. Ми з ним не говорили ще про ці чутки, тому я почав йому це розповідати… Він відповів що проти цього теж, адже це не наша природня віра, я також звісно підтримував його позицію.</p>
-                        <p>Почало вже темніти. Ми вирушили на віче, дорогою ми ще довго говорили, про це хрещення і думали що будуть казати на вічі. Ми прийшли трішки раніше і я почав шукати по всюди свою квітоньку. І от коли я її побачив в цілій лавині людей то на мить наче втратив дар мови і просто тонув очами в її красі… Вона просто заворожувала мій розум, неначе тримала в руках моє серце і душу, керувала моїми почуттями. І от вона вже біжить на мене щоб пошвидше обійняти – а я ділі стою і любуюся нею.</p>
-                        <p>Вона дуже- дуже міцно обіймала мене і я знову почав неначе танути від кохання, я не міг описати ні на якій мові ніякими словами -свою любов до неї, це був просто смертельне кохання, вічне серце, вічна радість, ну от знову не вистачає слів… Ми трималися за руки і уважно слухали процес, глеготіння на вічі.</p>
-                        <p>Іванко стояв поряд, в нього не було ні дівчини ні друзів тому він постійно ходив за мною як отой хвостик у лисички. І ось слово взяв Володимир, всі різко замовчали… Воно й недивно виступає князь великої Русі. Він почав говорити про хрещення про те наскліьки нам це допоможе у зв’язках з іншими народами, про те що у нас будуть книги, церкви, наука почне розвиватися… І от він каже головну фразу- завтра всі мають прийти у Дніпро де нас всіх охрестять. Одразу почався галас шум але його одразу призупинили, всі пішли додому думаючи що буде завтра.</p>
-                        <p>Неначе ніхто не міг повірити що ми зрічемся Перуна, не будемо любити як Лада, просто будемо вірити в якогось Ісуса, хто він такий взагалі… Я проводив Марусю знову додому. Я бачив яка вона була засмучена через це, тому постійно намагався підтримати її. В той день я залишився ночувати разом з нею, бо нам було обом дуже сумно… Ми ще довго лежали обіймаючись і цілуючись з очами суму і пристрасті. Води і вогню. Я і досі згадую цей день він був по справжньому особливий.</p>
-                        <p>І ось ми нарешті заснули, ми спали дуже міцно-міцно і прокинулися від галасу. Всіх почали силою зганяти до Дніпра на хрещення. Звісно ніхто не хотів туди йти, але вибору не було… Всіх людей почали зганяти в Дніпро, добре що вода ще була тепла. І ось настала наша черга вступити в ріку, тепер освячену ріку. Ми зайшли тримаючись за руки, так само і вийшли. Наче хотіли пройти це разом. Скажу по правді ми тоді нічого не відчули вода як вода…</p>
-                        <p>Насправді там було багато людей, але не всі. Після цього, після хрещення, заборонялося навіть обряди проводити. Але деякі все одно потайки були язичниками просто наче одягнули вишиванку вишиту хрестом, а знизу була наша язичницька… Але так само швидко як люди знайшли вихід з цих обставин так само швидко почали забуватися традиції, пісні, говори навіть почали змінюватися. Через те що віра проповідувалася в церкві на церковно-слов’янській мові, тому і наші деякі слова замінялися цими у вжитку.</p>
-                        <p>І тоді я знову згадав ті слова: віра, мова, традиції – душа нації. Я зрозумів що з цього і почалися наші проблеми, наш корінь меньшовартості. Прийнявши чужу віру ми прийняли чужі традиції звичаї, чужу мову, чужі нові слова… Люди наче не просто зріклися своєї віри, а наче зріклися самих себе, так і зараз в нашій сучасності. Тільки тепер ми ще більше всього зрікаємося вважаючи що питання мови є вторинне.</p>
-                        <p>Культура і традиції це для нас щось уже старе, а любити батьківщину і рідну землю вже не в тренді. Про що тут взагалі казати якщо ми сьогодні кажемо модна вишиванка. Це як модна мама, чи модно допомагати сьогодні бабусі… Любити — це найприродніше. Як лисиця, що до останнього боронить нору, ми теж маємо боронити свій дім. А не тікати, ніби земля — просто ґрунт під ногами.</p>
-                        <p>Вона — пам’ять предків, їхні пісні, слова, що гнучкою ниткою зшивають нас у єдине. Насправді ми служимо богу, служимо в армії, але перестали служити найосновнішому і найголовнішому, служити своїй землі і державі… Ми кажемо Слава Україні – та не прославляємо її. Кажемо запануєм і ми браття у своїй сторонці – та для чого ми ж не пануємо, ми слабкі альтруїсти які слухають інших опираються на когось як літні люди, шукають опори.</p>
-                        <p>Ми маємо бути сильними. Любити землю не за щось не за гроші, а тому що це наш дім це наша мова це наші традиції. Так творіть робіть хоч щось кожного дня поки ми ще існуємо… Життя занадто коротке щоб не вимагати змінити себе, перервати ці кляті війни поколінь. Досить перекладати відповідальність на своїх дітей.</p>
-                        <p>Настав час запанувати, заговорити рідною мовою, час змінитися і побудувати справжню сильну державу як колись була Русь… Ми ж такі сильні ми ж українці ми ж їхні предки, згадайте в які тяжкі часи жили наші предки, наші УНР, УПА і ОУН наші козаки, вони всі жили майже постійно без держави, але вони любили і боролися до кінця, а ми сьогодні зрікаємся їх і говоримо мовою ворога, не шануємо ні сьогоднішніх ні цих героїв що сотні років тому вмирали за нашу свободу.</p>
-                        <p>Треба стати нарешті з колін і почати творити як творили вони всі. всі наші пердки… І не чекай, що влада зробить усе за тебе. Держава починається з рук: тих, хто шиє сорочку, хто садить хліб, хто вчить дитину співати. Якщо хочеш змін — роби щось сьогодні. Почни з мови, з пісні, з дому. І пам’ятай: коли кожний збереже щось маленьке — ми збережемо все велике.</p>
-                        <div class="fade-overlay"></div>
-                    </div>
-                    <button class="btn-read" onclick="toggleStory('story2', this)">Читати повністю</button>
+            <div class="prose-item reveal-element">
+                <span class="prose-meta">Оповідання про Хрещення Русі</span>
+                <h3 class="prose-title">Віра, мова, традиції</h3>
+                <div class="prose-content" id="prose2">
+                    <p>Тихий ранок, йде сильний пористий дощ, злива… Я пробуджуся. Розплющую очі, від крапель дощу, що повільно стікали моїм обличчям. Вдягаю свою довгу одежу. Прямую пішки до долини Поділля.</p>
+                    <p>Йдучи я не міг зрозуміти що це такий за запах, наче якось згореного огню, сажі. Аж раптом я згадав що вчора було свято Купайла. День літнього сонцестояння – найдовший день року. Свято сонця, води вогню та родючості… Купайло і Марена – світло й темінь минувшого дню… Дажбог, Ярило, Мокош мої славні боги, славте цю природу, цей врожай майбутній, заберіть русалок цих вельможних до себе у вирій, у вирій тепла…</p>
+                    <p>І тут я замислився - чому кожного разу коли я думаю про ідею основну сутність язичництва, душа починає палати? Я неначе несвідомо наділяюся якоїсь сонячною енергією Дажбога… Сенс мого життя, життя 17 річного парубка з Південної Русі це надмірне кохання, нелюдська залежність від своєї супутниці Марічки – квітки, її ім’я і дійсно так перекладається… Який же сильний наш люб…</p>
+                    <p>Другий сенс яким я наділяю своє буття це любов, люб до рідної землі її дари наші традиції наша мова південно-руська яка найкраще звучить з поміж інших нарічь. Йдучи до поділля я чую розмови прохожих, кажуть наче Володимир перестане вірити в Перуна, зрічеться його, я не міг збагнути, що саме вони мали на увазі, він не поважає одного з головних богів чи що, дивно якось…</p>
+                    <p>Я згадую у мить, що було вчора і як ми справляли той праздник, неначе по тілу пробігає годинник минулого вітру… Пам’ятаю як дівчата плели віночки з м’яти, полину, барвінку та інших трав. Вони збиралися всі разом і клали обережно віночки на воду, якщо він припливе до їх судженого то будуть жити вони довго і прекрасній любній грамонії… Насправді я обожнюю це свято, бо ми нажаль трохи далеко живемо один від одного з Марічкою, а тут цілий вечір разом вона у неймовірній вишитій сукні разом зі мною святкує це особливе свято… Знову хочу до неї…</p>
+                    <p>Так от сенс свята ще в тому що до нього не допускають самотніх чи вдовиць. Насправді я постійно сумую за нею тому вчорашній день так запам’ятався, а точно ми ще вчора перескочили таки через те вогнище, а це означає що Дажбог схвалив наш люб на все життя… Який же я радий…</p>
+                    <p>Я далі йду говорячи сам з собою, як я це постійно роблю, аж раптом випадково зустрічаю її, свою квітоньку і раптом мене наповнює знову це неземне почуття щастя... Але я не розумію що трапилося вона неначе засмучена чимось, я довго довго обіймаю її і запитую що сталося і чую ці трагічні для нас обох слова: — Володимир зрікся віри і хоче заборонити нашу віру, хоче нас охрестити.</p>
+                    <p>Я не міг повірити в ці слова я зранку чув щось схоже але не розумів контексту, я люблю свою землю я служу їй її природі її творінню моїй Марічці. Хіба я можу прийняти цю віру христа - вона не свідчить навіть про половину моєї любви і моєї сутности, заради чого це взагалі… Я втішаю своє кохання намагаючись не показувати своїх сліз. І тієї туги своєї закривавленої душі… Вона все ж таки знає мене не один вік тому помічає моє розчарування і каже мені я незнаю що це за віра, але я все одно залишуся вірною Дажбогу, я все одно буду вірити в Ладу богиню кохання і кохати тебе сильно сильно чуєш…</p>
+                    <p>Я цілую її раз за разом і теж кажу: Я теж не можу уявити своє життя без тебе. Я теж даю клятву всім богам і Ладі що кохатиму тебе назавжди… Плітки про це вже давно ходили по русі своїми глиняними ногами… Ще коли Володимир тільки познайомився з Анною, вона ж християнка та батько ж імператор не визнавав цього шлюбу та тепер коли Володимир взяв Корсунь, дійшла звістка що він там охрестився і пливе на Русь щоб всіх охрестити, та хто прийме тут цю віру, ми ж всі слов’яни ми всі маємо злитися язичницькому морі як один народ, південо-руський наш Київ наші поляни наші державотворці…</p>
+                    <p>Ми всі не просто поклонялися цим богам, а дійсно жили їхніми ідеями, думами цінностей тієї віри, і тут якесь християнство незрозуміле – це взагалі віра Візантії не наша… Таку думку як ми підтримували всі, ніхто навіть не розумів сутності віри Христа, що буде з нашими святами та традиціями… Я промовив: — Сонце ти моє, не звертай уваги, це напевно просто чутки…</p>
+                    <p>Вона на мить зраділа і міцно-міцно мене обійняла. Вже ставало темно, сонце заходило за небо, з’являвся місяць, повний цікаво а він завжди такий… Я провів її додому, ще довго ніяк не міг відпустити її руку, знову прощався з сльозами на очах. Засмутившись цим я пішов додому, дорогою додому просив Ладу щоб та пошвидше нас звела знову, я вірив що саме вона щоразу організовує нашу випадкову зустріч.</p>
+                    <p>Прийшовши додому, я знову пішов розпитувати в свого батька про наші віру та про наших богів, я кожного дня дізнався щось нове, або просто забув, згадував минуле. Незнаю взагалі я мало що пам’ятаю з дитинства, пам’ятаю лише один наратив який мені скзали коли я був маленьким хлопчиком: — будь собою і люби завжди свою землю…</p>
+                    <p>Тоді я не розумів цих слів так глибоко як через декілька років і зараз. Я завжди думав що тут мається на увазі про Батьківщину. Допоки до мене через деякий час не прийшов дивний лист. Ну як прийшов, мені приніс його брат і сказав що знайшов його на вулиці, але там писалося дивними наріччями. Я все не міг збагнути що то за говір такий. Неначе східне наріччя неначе наше. Там було декілька слів які я незнав, в ті часи часто писали мовою колишніх племен. Тому це не було дивно. Я прочитав тільки 2 сторінки того рукопису, сього їх було 2 по 20, це наче 40 не пам’ятаю вже.</p>
+                    <p>Мене настільки захопило читання, що я не помітив як за вікном почалася буря. Це було ще літо тому це мало би посіяти дивину в моїй голові. Та я з великим інтересом далі читав той рукопис, прочитавши я зациклив свою увагу на одній фразі. Я згадав що колись бачив її раніше на якісь архітектурній споруді чи то недалеко від кладовища. Десь там було написане щось схоже… Це було коли мені було 10 тоді я нічого не зрозумів прочитавши тих декілька слів і просто забув про це.</p>
+                    <p>Так от там писалося про те що найбільшою цінністю і безсмертною є для кожного його ідея і душа. І нижче було зображенно якісь карикатури житта, сонця, кордонів держави і писалися слова: традиції, мова, культура… Так от сенс в тому що культуру, мова і традиції це не віддільні речі людини які формують її як ідентичність як націю, наприклад я вважаю себе південним русином. А душу тобто твою ідею головну вбити не можливо. Наше тіло занадто слабке перед думкою і ідеєю. Тому людина помирає тільки фізично ідеї які вона творила не вмирають…</p>
+                    <p>Я закрив книгу і вклався спати, довго ще роздумуючи над цими словами. Наступного дня коли я прокинувся одразу вирушив на віче яке було заплановане на дев’яту вечора ще було довго до нього, але я мав зустрітися з своїм другом Іванком. Я йшов на поділ там жили всі і Марічка і мій друг Іванко. Один я жив в селищі що під Києвом, тому дорога була не маленька, близько три години пішки чи годину верхом на коні. Коня в мене не було тому постійно ходив пішки.</p>
+                    <p>Нарешті ми зустрілися з ним і проходячи біля Дніпра він чомусь почав молитися. Це було досить дивно та й я не розумів тих молитов. Вони були наче якоюсь видуманою мовою, що зветься церковно-слов’янська. Це була болгарська мова яку тоді використовували у більшості молитов і книг, в тому числі із Візантії. Звідти походило християнство яке хотіли насадити нам. Іван ніколи не був язичником так як він народився і прожив своє дитинство на Корсуні. Там він і познайомився з цією вірою, а в років 10 тому переїхав сюди.</p>
+                    <p>Він був старшим за мене на 3 дні, пам’ятаю як він постійно жартував про це… Насправді я спокійно ставився до того що він іншої віри адже він поважав мою віру і мої традиції. Ми разом ходили на різні свята Купайла, зелені свята і тд… Він святкував наші свята теж, полюбив наші традиції. Фактично він вірив у дві віри одночасно. Це не було дивно для таких як він, але всі хто жили на Русі вірили тільки у єдину віру - язичництво. Ми з ним не говорили ще про ці чутки, тому я почав йому це розповідати… Він відповів що проти цього теж, адже це не наша природня віра, я також звісно підтримував його позицію.</p>
+                    <p>Почало вже темніти. Ми вирушили на віче, дорогою ми ще довго говорили, про це хрещення і думали що будуть казати на вічі. Ми прийшли трішки раніше і я почав шукати по всюди свою квітоньку. І от коли я її побачив в цілій лавині людей то на мить наче втратив дар мови і просто тонув очами в її красі… Вона просто заворожувала мій розум, неначе тримала в руках моє серце і душу, керувала моїми почуттями. І от вона вже біжить на мене щоб пошвидше обійняти – а я ділі стою і любуюся нею.</p>
+                    <p>Вона дуже- дуже міцно обіймала мене і я знову почав неначе танути від кохання, я не міг описати ні на якій мові ніякими словами -свою любов до неї, це був просто смертельне кохання, вічне серце, вічна радість, ну от знову не вистачає слів… Ми трималися за руки і уважно слухали процес, глеготіння на вічі.</p>
+                    <p>Іванко стояв поряд, в нього не було ні дівчини ні друзів тому він постійно ходив за мною як отой хвостик у лисички. І ось слово взяв Володимир, всі різко замовчали… Воно й недивно виступає князь великої Русі. Він почав говорити про хрещення про те наскліьки нам це допоможе у зв’язках з іншими народами, про те що у нас будуть книги, церкви, наука почне розвиватися… І от він каже головну фразу- завтра всі мають прийти у Дніпро де нас всіх охрестять. Одразу почався галас шум але його одразу призупинили, всі пішли додому думаючи що буде завтра.</p>
+                    <p>Неначе ніхто не міг повірити що ми зрічемся Перуна, не будемо любити як Лада, просто будемо вірити в якогось Ісуса, хто він такий взагалі… Я проводив Марусю знову додому. Я бачив яка вона була засмучена через це, тому постійно намагався підтримати її. В той день я залишився ночувати разом з нею, бо нам було обом дуже сумно… Ми ще довго лежали обіймаючись і цілуючись з очами суму і пристрасті. Води і вогню. Я і досі згадую цей день він був по справжньому особливий.</p>
+                    <p>І ось ми нарешті заснули, ми спали дуже міцно-міцно і прокинулися від галасу. Всіх почали силою зганяти до Дніпра на хрещення. Звісно ніхто не хотів туди йти, але вибору не було… Всіх людей почали зганяти в Дніпро, добре що вода ще була тепла. І ось настала наша черга вступити в ріку, тепер освячену ріку. Ми зайшли тримаючись за руки, так само і вийшли. Наче хотіли пройти це разом. Скажу по правді ми тоді нічого не відчули вода як вода…</p>
+                    <p>Насправді там було багато людей, але не всі. Після цього, після хрещення, заборонялося навіть обряди проводити. Але деякі все одно потайки були язичниками просто наче одягнули вишиванку вишиту хрестом, а знизу була наша язичницька… Але так само швидко як люди знайшли вихід з цих обставин так само швидко почали забуватися традиції, пісні, говори навіть почали змінюватися. Через те що віра проповідувалася в церкві на церковно-слов’янській мові, тому і наші деякі слова замінялися цими у вжитку.</p>
+                    <p>І тоді я знову згадав ті слова: віра, мова, традиції – душа нації. Я зрозумів що з цього і почалися наші проблеми, наш корінь меньшовартості. Прийнявши чужу віру ми прийняли чужі традиції звичаї, чужу мову, чужі нові слова… Люди наче не просто зріклися своєї віри, а наче зріклися самих себе, так і зараз в нашій сучасності. Тільки тепер ми ще більше всього зрікаємося вважаючи що питання мови є вторинне.</p>
+                    <p>Культура і традиції це для нас щось уже старе, а любити батьківщину і рідну землю вже не в тренді. Про що тут взагалі казати якщо ми сьогодні кажемо модна вишиванка. Це як модна мама, чи модно допомагати сьогодні бабусі… Любити — це найприродніше. Як лисиця, що до останнього боронить нору, ми теж маємо боронити свій дім. А не тікати, ніби земля — просто ґрунт під ногами.</p>
+                    <p>Вона — пам’ять предків, їхні пісні, слова, що гнучкою ниткою зшивають нас у єдине. Насправді ми служимо богу, служимо в армії, але перестали служити найосновнішому і найголовнішому, служити своїй землі і державі… Ми кажемо Слава Україні – та не прославляємо її. Кажемо запануєм і ми браття у своїй сторонці – та для чого ми ж не пануємо, ми слабкі альтруїсти які слухають інших опираються на когось як літні люди, шукають опори.</p>
+                    <p>Ми маємо бути сильними. Любити землю не за щось не за гроші, а тому що це наш дім це наша мова це наші традиції. Так творіть робіть хоч щось кожного дня поки ми ще існуємо… Життя занадто коротке щоб не вимагати змінити себе, перервати ці кляті війни поколінь. Досить перекладати відповідальність на своїх дітей.</p>
+                    <p>Настав час запанувати, заговорити рідною мовою, час змінитися і побудувати справжню сильну державу як колись була Русь… Ми ж такі сильні ми ж українці ми ж їхні предки, згадайте в які тяжкі часи жили наші предки, наші УНР, УПА і ОУН наші козаки, вони всі жили майже постійно без держави, але вони любили і боролися до кінця, а ми сьогодні зрікаємся їх і говоримо мовою ворога, не шануємо ні сьогоднішніх ні цих героїв що сотні років тому вмирали за нашу свободу.</p>
+                    <p>Треба стати нарешті з колін і почати творити як творили вони всі. всі наші пердки… І не чекай, що влада зробить усе за тебе. Держава починається з рук: тих, хто шиє сорочку, хто садить хліб, хто вчить дитину співати. Якщо хочеш змін — роби щось сьогодні. Почни з мови, з пісні, з дому. І пам’ятай: коли кожний збереже щось маленьке — ми збережемо все велике .</p>
+                    <div class="fade-mask"></div>
                 </div>
+                <button class="magnetic-btn" onclick="toggleProse('prose2', this)">Читати повністю</button>
             </div>
         </div>
     </section>
 
-    <div class="separator sep-3">
-        <h2>Слово і діло</h2>
+    <div class="separator">
+        <div class="separator-bg" style="background-image: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'); position:absolute; width:100%; height:120%; top:0; z-index:-1; background-attachment: fixed; background-size:cover; filter: brightness(0.5);"></div>
+        <h2 class="reveal-element" data-type-title="Слово і діло"></h2>
     </div>
 
     <section id="quotes">
-        <div class="section-header">
-            <h2>Думки</h2>
-            <div class="line"></div>
+        <div class="section-header reveal-element">
+            <span class="section-subtitle">Thoughts</span>
+            <h2 class="section-title">Думки</h2>
+            <div class="title-line"></div>
         </div>
-        <div class="quotes-grid">
-            <div class="quote-item">
-                <p class="quote-text">«Будь-яка влада, яка працює проти націоналізму і не ухвалює національні закони, не дає правильні посили — діє проти нації.»</p>
-                <span class="quote-note">Політика і Нація</span>
+        <div class="quote-slider">
+            <div class="quote-card">
+                <div class="quote-icon">“</div>
+                <p class="quote-text">Будь-яка влада, яка працює проти націоналізму і не ухвалює національні закони, не дає правильні посили — діє проти нації.</p>
             </div>
-            <div class="quote-item">
-                <p class="quote-text">«Не пора, не пора малоросам служить —<br>Пора, пора націоналізм приймить.»</p>
-                <span class="quote-note">Заклик</span>
+            <div class="quote-card">
+                <div class="quote-icon">“</div>
+                <p class="quote-text">Не пора, не пора малоросам служить —<br>Пора, пора націоналізм приймить.</p>
             </div>
-            <div class="quote-item">
-                <p class="quote-text">«Українці — це невмируща нація з поламаними хребтами.»</p>
-                <span class="quote-note">Про долю</span>
+            <div class="quote-card">
+                <div class="quote-icon">“</div>
+                <p class="quote-text">Українці — це невмируща нація з поламаними хребтами.</p>
             </div>
-            <div class="quote-item">
-                <p class="quote-text">«Суть не в тому, до якої ти належиш конфесії — чи ти греко-католик, чи ти римо-католик, чи ти язичник, чи ти православний, невіглас невіруючий суть в тому що ти є русин - бо говір твій руський.»</p>
-                <span class="quote-note">Ідентичність</span>
+            <div class="quote-card">
+                <div class="quote-icon">“</div>
+                <p class="quote-text">Суть не в тому, до якої ти належиш конфесії... суть в тому що ти є русин - бо говір твій руський.</p>
             </div>
-            <div class="quote-item">
-                <p class="quote-text">«Спочатку була руська потім церковно словʼянська , потім польська , затім російська , знов не руська церковно словʼянська, затім російська знову ,так і досі жиє. І війна та буде вічна , вічна як життя. Та не забувайте браття мої -руська дім мого і вашого буття.»</p>
-                <span class="quote-note">Історія мови</span>
+            <div class="quote-card">
+                <div class="quote-icon">“</div>
+                <p class="quote-text">Та не забувайте браття мої -руська дім мого і вашого буття.</p>
             </div>
-        </div>
-    </section>
-
-    <section id="journal">
-        <div class="section-header">
-            <h2>Журнал</h2>
-            <div class="line"></div>
-        </div>
-        <div class="grid-2">
-            <div class="article-card tilt-card">
-                <span class="article-date">26 Листопада 2025 &bull; 4 хв</span>
-                <h3 class="article-title">Націоналізм як фундамент</h3>
-                <a href="#" style="color:var(--gold); font-weight:600; font-size:0.8rem; text-transform:uppercase;">Читати статтю</a>
-            </div>
-            <div class="article-card tilt-card">
-                <span class="article-date">10 Листопада 2025 &bull; 6 хв</span>
-                <h3 class="article-title">Мова — кордон нації</h3>
-                <a href="#" style="color:var(--gold); font-weight:600; font-size:0.8rem; text-transform:uppercase;">Читати статтю</a>
-            </div>
-        </div>
-        
-        <div class="news-item" style="margin-top: 40px;">
-            <div class="news-date">20 Листопада</div>
-            <p style="color: #bbb;">Читання віршів у Києві. Літературний вечір, присвячений сучасній поезії.</p>
         </div>
     </section>
 
-    <section id="newsletter">
-        <div class="newsletter-content">
-            <h2>Підпишись на оновлення</h2>
-            <p>Будь першим, хто прочитає нові твори</p>
-            <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Дякуємо за підписку!');">
-                <input type="email" placeholder="Ваш Email" required>
-                <button type="submit">Підписатися</button>
-            </form>
+    <section id="contact" class="contact-section">
+        <div class="section-header reveal-element">
+            <h2 class="section-title">Зв'язок</h2>
         </div>
-    </section>
-
-    <section id="contact" class="contact">
-        <h2>Зв'язок</h2>
-        <div class="socials">
-            <a href="https://www.instagram.com/kostiantyn_mazurak/" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.facebook.com/people/%D0%9A%D0%BE%D1%81%D1%82%D1%8F%D0%BD%D1%82%D0%B8%D0%BD-%D0%9C%D0%B0%D0%B7%D1%83%D1%80%D0%B0%D0%BA/pfbid02YKQ5TdKaLeRfW4ME475rnLbF12bnPouJn5p5svaadRnRDGpQ1Ra8CKrh4G7Vp5FTl/?locale=uk_UA" target="_blank" class="social-link"><i class="fab fa-facebook"></i></a>
-            <a href="https://t.me/kostiapoetry" target="_blank" class="social-link"><i class="fab fa-telegram"></i></a>
-            <a href="https://www.tiktok.com/@kostiantin_mazura" target="_blank" class="social-link"><i class="fab fa-tiktok"></i></a>
-            <a href="mailto:email@example.com" class="social-link"><i class="fas fa-envelope"></i></a>
+        <div class="social-grid">
+            <a href="https://www.instagram.com/kostiantyn_mazurak/" target="_blank" class="social-item"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/people/%D0%9A%D0%BE%D1%81%D1%82%D1%8F%D0%BD%D1%82%D0%B8%D0%BD-%D0%9C%D0%B0%D0%B7%D1%83%D1%80%D0%B0%D0%BA/pfbid02YKQ5TdKaLeRfW4ME475rnLbF12bnPouJn5p5svaadRnRDGpQ1Ra8CKrh4G7Vp5FTl/?locale=uk_UA" target="_blank" class="social-item"><i class="fab fa-facebook"></i></a>
+            <a href="https://t.me/kostiapoetry" target="_blank" class="social-item"><i class="fab fa-telegram"></i></a>
+            <a href="https://www.tiktok.com/@kostiantin_mazura" target="_blank" class="social-item"><i class="fab fa-tiktok"></i></a>
+            <a href="mailto:email@example.com" class="social-item"><i class="fas fa-envelope"></i></a>
         </div>
     </section>
 
     <footer>
-        <p>&copy; 2025 Костянтин Мазурак. Всі права захищено.</p>
+        <p>&copy; 2025 Костянтин Мазурак. All rights reserved.</p>
     </footer>
 
     <script>
-        // Preloader
+        // --- 1. Preloader & Particle Init ---
         window.addEventListener('load', () => {
             const preloader = document.getElementById('preloader');
             preloader.style.opacity = '0';
-            preloader.style.visibility = 'hidden';
+            setTimeout(() => {
+                preloader.style.visibility = 'hidden';
+                typeWriter();
+                reveal();
+                generateParticles();
+            }, 800);
         });
 
-        // Scroll Reveal
-        function reveal() {
-            var reveals = document.querySelectorAll(".reveal");
-            for (var i = 0; i < reveals.length; i++) {
-                var windowHeight = window.innerHeight;
-                var elementTop = reveals[i].getBoundingClientRect().top;
-                if (elementTop < windowHeight - 50) {
-                    reveals[i].classList.add("active");
-                }
+        // --- 2. Custom Cursor Logic (Magnetic) ---
+        const cursorOuter = document.querySelector('.cursor-outer');
+        const cursorInner = document.querySelector('.cursor-inner');
+        let mouseX = 0, mouseY = 0;
+        let outlineX = 0, outlineY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            cursorInner.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+        });
+
+        const animateCursor = () => {
+            outlineX += (mouseX - outlineX) * 0.15;
+            outlineY += (mouseY - outlineY) * 0.15;
+            cursorOuter.style.transform = `translate(${outlineX}px, ${outlineY}px) translate(-50%, -50%)`;
+            requestAnimationFrame(animateCursor);
+        };
+        animateCursor();
+
+        // Magnetic effect on buttons/links
+        const hoverTargets = document.querySelectorAll('a, button, .poem-card, .prose-item');
+        hoverTargets.forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+
+        // --- 3. Canvas Constellation Effect ---
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+        const particleCount = 60; // Adjust for density
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if(this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if(this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(212, 175, 55, 0.5)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
             }
         }
-        window.addEventListener("scroll", reveal);
+
+        function initParticles() {
+            particles = [];
+            for(let i=0; i<particleCount; i++) particles.push(new Particle());
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+                // Draw lines to mouse
+                const dx = mouseX - p.x;
+                const dy = mouseY - p.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if(dist < 150) {
+                    ctx.strokeStyle = `rgba(212, 175, 55, ${1 - dist/150})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(mouseX, mouseY);
+                    ctx.stroke();
+                }
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        initParticles();
+        animateParticles();
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; initParticles(); });
+
+        // --- 4. Typing Effects & Scroll Reveal ---
+        const observerOptions = { threshold: 0.1 };
         
-        // Smart Navbar
-        let lastScrollTop = 0;
-        const header = document.getElementById("main-header");
-        window.addEventListener("scroll", function() {
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            if (scrollTop > lastScrollTop) {
-                header.classList.add("hidden");
-            } else {
-                header.classList.remove("hidden");
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    
+                    // Trigger Stats Counter
+                    if(entry.target.classList.contains('stat-item')) {
+                        const num = entry.target.querySelector('.stat-number');
+                        const target = +num.getAttribute('data-target');
+                        let count = 0;
+                        const inc = target / 50;
+                        const timer = setInterval(() => {
+                            count += inc;
+                            if(count >= target) {
+                                num.textContent = target + (target === 2020 ? '' : '+');
+                                clearInterval(timer);
+                            } else {
+                                num.textContent = Math.ceil(count);
+                            }
+                        }, 30);
+                    }
+
+                    // Trigger Section Title Typing
+                    if(entry.target.hasAttribute('data-type-title')) {
+                        typeTitle(entry.target);
+                        observer.unobserve(entry.target); // Type only once
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-element, .stat-item, h2[data-type-title]').forEach(el => observer.observe(el));
+
+        function typeTitle(element) {
+            const text = element.getAttribute('data-type-title');
+            element.textContent = '';
+            let i = 0;
+            function typing() {
+                if(i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typing, 100);
+                }
             }
-            lastScrollTop = scrollTop;
+            typing();
+        }
+
+        // Hero Subtitle Typing
+        function initTypewriters() {
+            const heroText = "Поезія. Проза. Історична пам'ять.";
+            const heroEl = document.getElementById('hero-typewriter');
+            let i = 0;
+            function typeHero() {
+                if(i < heroText.length) {
+                    heroEl.textContent += heroText.charAt(i);
+                    i++;
+                    setTimeout(typeHero, 50);
+                }
+            }
+            typeHero();
+        }
+
+        // --- 5. Smart Navbar ---
+        let lastScroll = 0;
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+            
+            if (currentScroll > lastScroll && currentScroll > 100) {
+                header.classList.add('hidden'); // Scroll down
+            } else {
+                header.classList.remove('hidden'); // Scroll up
+            }
+            lastScroll = currentScroll;
         });
 
-        // 3D Tilt Effect for Cards
-        const cards = document.querySelectorAll('.tilt-card');
-        cards.forEach(card => {
+        // --- 6. Prose Toggle ---
+        function toggleProse(id, btn) {
+            const content = document.getElementById(id);
+            content.classList.toggle('open');
+            btn.textContent = content.classList.contains('open') ? "Згорнути" : "Читати повністю";
+        }
+
+        // --- 7. 3D Tilt for Poetry ---
+        document.querySelectorAll('.tilt-card').forEach(card => {
             card.addEventListener('mousemove', e => {
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
-                const rotateX = ((y - centerY) / centerY) * -5; // Max tilt angle
+                const rotateX = ((y - centerY) / centerY) * -5;
                 const rotateY = ((x - centerX) / centerX) * 5;
-
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
             });
-
             card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
             });
         });
 
-        // Typing Effect
-        const text = "Поезія. Проза. Історична пам'ять.";
-        let i = 0;
-        function typeWriter() {
-            if (i < text.length) {
-                // document.getElementById('hero-text').innerHTML += text.charAt(i);
-                i++;
-                setTimeout(typeWriter, 40);
-            }
-        }
-        
-        // Toggle Story
-        function toggleStory(id, btn) {
-            const content = document.getElementById(id);
-            content.classList.toggle('expanded');
-            btn.textContent = content.classList.contains('expanded') ? "Згорнути" : "Читати повністю";
+        function reveal() {
+            // Manual reveal for elements already in view
+            document.querySelectorAll('.reveal-element').forEach(el => {
+                if(el.getBoundingClientRect().top < window.innerHeight) el.classList.add('active');
+            });
         }
 
-        reveal(); 
+    </script>
+</body>
+</html>
     </script>
 </body>
 </html>
